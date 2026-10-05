@@ -1,0 +1,186 @@
+:root {
+  --bg: #0f1115;
+  --surface: #181b22;
+  --text: #e8eaf0;
+  --muted: #9aa1b2;
+  --accent: #6c8cff;
+  --typical: #3ddc84;
+  --mild: #f5c84c;
+  --elevated: #ff6b6b;
+  --border: #2a2e3a;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.banner {
+  background: #2a2e3a;
+  color: var(--muted);
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+main#app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.screen h1,
+.screen h2 {
+  margin-top: 0;
+}
+
+.subtitle {
+  color: var(--muted);
+}
+
+.btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.3rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.btn:hover {
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.choice {
+  flex: 1 1 auto;
+}
+
+.progress {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.question-text {
+  font-size: 1.15rem;
+}
+
+.task-screen {
+  text-align: center;
+}
+
+.stimulus-box {
+  font-size: 4rem;
+  font-weight: 700;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  user-select: none;
+}
+
+.stimulus-box.arrow.stop-cue {
+  color: var(--elevated);
+}
+
+.indicator-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.indicator-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.indicator-card.level-typical {
+  border-left-color: var(--typical);
+}
+.indicator-card.level-mild {
+  border-left-color: var(--mild);
+}
+.indicator-card.level-elevated {
+  border-left-color: var(--elevated);
+}
+
+.indicator-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.indicator-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.badge-typical {
+  background: rgba(61, 220, 132, 0.15);
+  color: var(--typical);
+}
+.badge-mild {
+  background: rgba(245, 200, 76, 0.15);
+  color: var(--mild);
+}
+.badge-elevated {
+  background: rgba(255, 107, 107, 0.15);
+  color: var(--elevated);
+}
+
+.indicator-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.ref-list {
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding-left: 1.2rem;
+}
+
+.disclaimer-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}

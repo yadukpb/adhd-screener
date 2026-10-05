@@ -1,0 +1,136 @@
+import type { Reference } from "../types";
+
+/**
+ * Citation set grounding every number and claim this screener makes.
+ * Nothing in scoring/, questionnaires/, or ui/ should assert a fact without
+ * a `usedFor` entry pointing back here.
+ */
+export const references: Reference[] = [
+  {
+    id: "polanczyk2007",
+    cite: "Polanczyk G, de Lima MS, Horta BL, Biederman J, Rohde LA (2007). The worldwide prevalence of ADHD: a systematic review and metaregression analysis. Am J Psychiatry 164(6):942-948.",
+    topic: "prevalence",
+    finding: "Pooled worldwide prevalence of ADHD in children/adolescents ~5.29%.",
+    usedFor: "Framing banner copy and report context ('not a diagnosis') around base rates.",
+  },
+  {
+    id: "simon2009",
+    cite: "Simon V, Czobor P, Balint S, Meszaros A, Bitter I (2009). Prevalence and correlates of adult ADHD: a meta-analysis. Br J Psychiatry 194(3):204-211.",
+    topic: "prevalence",
+    finding: "Pooled adult ADHD prevalence ~2.5%.",
+    usedFor: "Adult-screener framing text.",
+  },
+  {
+    id: "shaw2007",
+    cite: "Shaw P, Eckstrand K, Sharp W, et al. (2007). Attention-deficit/hyperactivity disorder is characterized by a delay in cortical maturation. PNAS 104(49):19649-19654.",
+    topic: "brain",
+    finding: "ADHD associated with delayed cortical maturation, most pronounced in prefrontal regions supporting executive control.",
+    usedFor: "Mapping elevated-score indicators to the 'pfc' region.",
+  },
+  {
+    id: "cortese2012",
+    cite: "Cortese S, Kelly C, Chabernaud C, et al. (2012). Toward systems neuroscience of ADHD: a meta-analysis of 55 fMRI studies. Am J Psychiatry 169(10):1038-1055.",
+    topic: "brain",
+    finding: "ADHD shows convergent hypoactivation in frontoparietal, ventral attention, and dorsal attention networks, and failure to deactivate default mode network (DMN) during task performance.",
+    usedFor: "Mapping sustained-attention indicators to 'parietal' and 'dmn'; DMN intrusion narrative in meaning text.",
+  },
+  {
+    id: "castellanos2008",
+    cite: "Castellanos FX, Proal E (2012). Large-scale brain systems in ADHD: beyond the prefrontal-striatal model. Trends Cogn Sci 16(1):17-26.",
+    topic: "brain",
+    finding: "Default-mode network (DMN) intrusion into task-positive activity correlates with reaction-time variability and attention lapses in ADHD.",
+    usedFor: "Linking CPT RT-SD/tau indicators to 'dmn' region.",
+  },
+  {
+    id: "aron2004",
+    cite: "Aron AR, Poldrack RA (2005). The cognitive neuroscience of response inhibition: relevance for genetic research in ADHD. Biol Psychiatry 57(11):1285-1292.",
+    topic: "brain",
+    finding: "Right inferior frontal gyrus (IFG) and pre-SMA, via a hyperdirect pathway to subthalamic nucleus/striatum, implement stopping of a planned response; this circuit is weaker in ADHD.",
+    usedFor: "Mapping stop-signal task indicators to 'ifg' and 'striatum'.",
+  },
+  {
+    id: "volkow2009",
+    cite: "Volkow ND, Wang GJ, Kollins SH, et al. (2009). Evaluating dopamine reward pathway in ADHD: clinical implications. JAMA 302(10):1084-1091.",
+    topic: "brain",
+    finding: "Reduced dopamine D2/D3 receptor and transporter availability in the nucleus accumbens / reward circuitry correlates with inattention symptom severity.",
+    usedFor: "Mapping low-motivation / high-omission CPT patterns to 'accumbens' and 'limbic'.",
+  },
+  {
+    id: "valera2007",
+    cite: "Valera EM, Faraone SV, Murray KE, Seidman LJ (2007). Meta-analysis of structural imaging findings in ADHD. Biol Psychiatry 61(12):1361-1369.",
+    topic: "brain",
+    finding: "Cerebellar vermis volume reductions are among the most consistently replicated structural findings in ADHD, linked to timing and motor-response variability.",
+    usedFor: "Mapping RT-variability indicators to 'cerebellum'.",
+  },
+  {
+    id: "bush2005",
+    cite: "Bush G (2011). Cingulate, frontal, and parietal cortical dysfunction in ADHD. Biol Psychiatry 69(12):1160-1167.",
+    topic: "brain",
+    finding: "Anterior cingulate cortex (ACC) hypoactivation during conflict/error monitoring is a consistent ADHD finding, linked to commission errors and post-error slowing deficits.",
+    usedFor: "Mapping commission-error indicators to 'acc'.",
+  },
+  {
+    id: "huangpollock2012",
+    cite: "Huang-Pollock CL, Karalunas SL, Tam H, Moore AN (2012). Evaluating vigilance deficits in ADHD: a meta-analysis of CPT performance. J Abnorm Psychol 121(2):360-371.",
+    topic: "tasks",
+    finding: "ADHD groups show moderate-to-large effect sizes on CPT omission errors, commission errors, and RT variability relative to controls (Hedges g ~0.5-0.7).",
+    usedFor: "CPT normative z-score thresholds and omission/commission weighting in scoring/stats.ts.",
+  },
+  {
+    id: "lijffijt2005",
+    cite: "Lijffijt M, Kenemans JL, Verbaten MN, van Engeland H (2005). A meta-analytic review of stopping performance in ADHD: deficient inhibitory motor control? J Abnorm Psychol 114(2):216-222.",
+    topic: "tasks",
+    finding: "ADHD groups show longer stop-signal reaction time (SSRT) than controls, effect size ~0.6, independent of go-RT differences.",
+    usedFor: "Stop-signal task SSRT normative thresholds; chosen SSRT integration method citation in stats.ts.",
+  },
+  {
+    id: "verbruggen2019",
+    cite: "Verbruggen F, Aron AR, Band GP, et al. (2019). A consensus guide to capturing the ability to inhibit actions and impulsive behaviors in the stop-signal task. eLife 8:e46323.",
+    topic: "consensus",
+    finding: "Recommends the integration method (not mean/median) for SSRT estimation, and requires p(respond|signal) between .25 and .75 for a valid estimate.",
+    usedFor: "ssrtIntegration() implementation and the StopSummary.valid gate in scoring.",
+  },
+  {
+    id: "kofler2013",
+    cite: "Kofler MJ, Rapport MD, Bolden J, et al. (2013). Working memory deficits and social problems in children with ADHD. J Abnorm Child Psychol 41(1):115-126.",
+    topic: "tasks",
+    finding: "ADHD groups show moderate working-memory deficits on n-back and span tasks (g ~0.4-0.6), partially independent of inhibitory control deficits.",
+    usedFor: "N-back d' normative thresholds.",
+  },
+  {
+    id: "kessler2005asrs",
+    cite: "Kessler RC, Adler L, Ames M, et al. (2005). The World Health Organization Adult ADHD Self-Report Scale (ASRS): a short screening scale for use in the general population. Psychol Med 35(2):245-256.",
+    topic: "questionnaires",
+    finding: "ASRS-v1.1 Part A (6 items) has sensitivity 68.7% / specificity 99.5% against clinical diagnosis using the validated scoring algorithm (specific frequency threshold per item).",
+    usedFor: "questionnaires/asrs.ts item bank and scoring thresholds.",
+  },
+  {
+    id: "ward1993wurs",
+    cite: "Ward MF, Wender PH, Reimherr FW (1993). The Wender Utah Rating Scale: an aid in the retrospective diagnosis of childhood ADHD. Am J Psychiatry 150(6):885-890.",
+    topic: "questionnaires",
+    finding: "WURS-25 score >=46 discriminates adults with childhood-onset ADHD from controls with ~86% sensitivity / ~99% specificity in the validation sample.",
+    usedFor: "questionnaires/wurs.ts item bank, 25-item short form, and the 46-point cutoff.",
+  },
+  {
+    id: "faraone2021consensus",
+    cite: "Faraone SV, Banaschewski T, Coghill D, et al. (2021). The World Federation of ADHD International Consensus Statement: 208 evidence-based conclusions about ADHD. Neurosci Biobehav Rev 128:789-818.",
+    topic: "consensus",
+    finding: "No single biomarker or task is diagnostic; ADHD diagnosis requires clinical interview against DSM-5/ICD-11 criteria, developmental history, and impairment across settings.",
+    usedFor: "The 'Not a diagnosis' banner and every report disclaimer in ui/report.ts.",
+  },
+  {
+    id: "barkley2006outcomes",
+    cite: "Barkley RA, Fischer M, Smallish L, Fletcher K (2006). Young adult outcome of hyperactive children: adaptive functioning in major life activities. J Am Acad Child Adolesc Psychiatry 45(2):192-202.",
+    topic: "outcomes",
+    finding: "Untreated childhood ADHD predicts significantly worse educational attainment, employment stability, and relationship outcomes in young adulthood versus controls.",
+    usedFor: "Motivational framing in ui/report.ts for 'elevated' results to seek clinical follow-up.",
+  },
+];
+
+export function referencesByTopic(topic: Reference["topic"]): Reference[] {
+  return references.filter((r) => r.topic === topic);
+}
+
+export function referenceById(id: string): Reference | undefined {
+  return references.find((r) => r.id === id);
+}
