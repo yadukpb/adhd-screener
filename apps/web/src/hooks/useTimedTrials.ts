@@ -56,7 +56,13 @@ export function useTimedTrials<Plan>(cfg: TimedTrialsConfig<Plan>): TimedTrialsS
       let respondedKey: string | null = null;
 
       const onKey = (e: KeyboardEvent) => {
-        if (!cfgRef.current.keys.includes(e.key) || responded) return;
+        if (!cfgRef.current.keys.includes(e.key)) return;
+        // Space/ArrowUp/ArrowDown scroll the page and ArrowLeft/Right can
+        // scroll horizontally by default -- without this, every response
+        // yanks the viewport out from under the task (confirmed live: a
+        // single unprevented Space press scrolled the page >500px).
+        e.preventDefault();
+        if (responded) return;
         responded = true;
         rt = performance.now() - onsetAt;
         respondedKey = e.key;

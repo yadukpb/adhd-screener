@@ -1,15 +1,26 @@
 import { Schema, model, type InferSchemaType } from "mongoose";
 
+// Mongoose's Number SchemaType hard-rejects NaN (throws a CastError), but
+// @adhd-screener/core legitimately produces NaN for these derived fields
+// when there's not enough data (e.g. a go/no-go task where every go trial
+// was missed -- confirmed live: it crashed the whole session save instead
+// of storing what we actually have). computeIndicators()/the UI already
+// treat NaN as a "not enough data" sentinel via Number.isFinite checks, so
+// these use Mixed to store it as-is rather than losing the real value or
+// failing the write; plain counts (nGo, hits, etc.) are always well-defined
+// integers and stay as Number.
+const flexibleFloat = Schema.Types.Mixed;
+
 const cptSummarySchema = new Schema(
   {
     nGo: Number,
     nNoGo: Number,
-    omissionPct: Number,
-    commissionPct: Number,
-    meanRt: Number,
-    rtSd: Number,
-    tau: Number,
-    dPrime: Number,
+    omissionPct: flexibleFloat,
+    commissionPct: flexibleFloat,
+    meanRt: flexibleFloat,
+    rtSd: flexibleFloat,
+    tau: flexibleFloat,
+    dPrime: flexibleFloat,
   },
   { _id: false },
 );
@@ -17,10 +28,10 @@ const cptSummarySchema = new Schema(
 const stopSummarySchema = new Schema(
   {
     valid: Boolean,
-    ssrt: Number,
-    pRespondGivenStop: Number,
-    meanGoRt: Number,
-    meanSsd: Number,
+    ssrt: flexibleFloat,
+    pRespondGivenStop: flexibleFloat,
+    meanGoRt: flexibleFloat,
+    meanSsd: flexibleFloat,
   },
   { _id: false },
 );
@@ -31,7 +42,7 @@ const nbackSummarySchema = new Schema(
     misses: Number,
     falseAlarms: Number,
     correctRejections: Number,
-    dPrime: Number,
+    dPrime: flexibleFloat,
   },
   { _id: false },
 );
