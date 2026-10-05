@@ -3,6 +3,7 @@
 // scoring/persistence) so "how a CPT is scored" only ever lives in one place.
 
 export * from "./types";
+export * from "./categories";
 
 export * from "./scoring/stats";
 export * from "./scoring/indicators";
@@ -19,3 +20,5 @@ export * from "./tasks/stopSignal";
 export * from "./tasks/nback";
 
 export * from "./exercises/library";
+
+export * from "./learningPath";

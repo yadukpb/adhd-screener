@@ -5,10 +5,11 @@
  * every exercise and the UI that renders it should keep saying so.
  */
 
+import type { ReportCategory } from "../categories";
+
 export interface Exercise {
   id: string;
-  /** Matches the category titles used in apps/web's plainLanguage.ts report sections. */
-  category: "Self-reported symptoms" | "Attention & focus" | "Impulse control" | "Working memory";
+  category: ReportCategory;
   title: string;
   technique: string;
   /** Why this helps, in plain language, tied to the cited research. */

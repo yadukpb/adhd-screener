@@ -9,6 +9,7 @@ import { ScreeningFlow } from "./pages/ScreeningFlow";
 import { ReportPage } from "./pages/ReportPage";
 import { LearnAboutAdhd } from "./pages/LearnAboutAdhd";
 import { Exercises } from "./pages/Exercises";
+import { LearningPath } from "./pages/LearningPath";
 
 export function App() {
   return (
@@ -45,6 +46,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <ReportPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/learning-path"
+            element={
+              <ProtectedRoute>
+                <LearningPath />
               </ProtectedRoute>
             }
           />

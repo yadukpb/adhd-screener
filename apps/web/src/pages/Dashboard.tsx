@@ -38,6 +38,14 @@ export function Dashboard() {
 
       {sessions && sessions.length > 0 && (
         <div className="space-y-6">
+          <Link to="/learning-path" className="glass-card flex items-center justify-between gap-3 p-5 transition hover-inset">
+            <div>
+              <p className="font-semibold text-heading">Your learning path</p>
+              <p className="mt-0.5 text-sm text-subtle">Sections to read and exercises to try, based on your latest results.</p>
+            </div>
+            <span className="shrink-0 text-brand-600 dark:text-brand-300">&rarr;</span>
+          </Link>
+
           <TrendChart sessions={sessions} />
 
           <div className="glass-card divide-y divide-faint">

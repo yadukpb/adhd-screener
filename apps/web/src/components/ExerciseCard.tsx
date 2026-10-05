@@ -1,10 +1,33 @@
 import type { Exercise } from "@adhd-screener/core";
 import { referenceById } from "@adhd-screener/core";
 
-export function ExerciseCard({ exercise }: { exercise: Exercise }) {
+interface Props {
+  exercise: Exercise;
+  /** When provided, shows a done/pending toggle in the card header -- used by the learning path, omitted everywhere else (the report, the standalone library). */
+  progress?: { done: boolean; onToggle: () => void };
+}
+
+export function ExerciseCard({ exercise, progress }: Props) {
   return (
-    <article className="glass-card border-l-4 border-l-brand-500 p-5 dark:border-l-brand-400">
-      <p className="text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-300">{exercise.category}</p>
+    <article
+      className={`glass-card border-l-4 p-5 ${
+        progress?.done ? "accent-typical" : "border-l-brand-500 dark:border-l-brand-400"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-300">{exercise.category}</p>
+        {progress && (
+          <button
+            type="button"
+            onClick={progress.onToggle}
+            className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition ${
+              progress.done ? "badge-typical" : "bg-inset text-subtle hover:text-heading"
+            }`}
+          >
+            {progress.done ? "✓ Done" : "Mark as done"}
+          </button>
+        )}
+      </div>
       <h3 className="mt-1 text-lg font-bold text-heading">{exercise.title}</h3>
       <p className="mt-1 text-xs text-subtle">Technique: {exercise.technique}</p>
       <p className="mt-3 text-sm leading-relaxed text-body">{exercise.summary}</p>

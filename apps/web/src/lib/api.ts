@@ -58,3 +58,25 @@ export const sessionsApi = {
   list: () => request<SessionSummary[]>("/api/sessions"),
   get: (id: string) => request<SessionSummary>(`/api/sessions/${id}`),
 };
+
+export interface LearningPathStep {
+  key: string;
+  type: "learn" | "practice";
+  category: string;
+  title: string;
+  anchor?: string;
+  exerciseId?: string;
+  status: "pending" | "done";
+  completedAt?: string;
+}
+
+export interface LearningPath {
+  _id?: string;
+  steps: LearningPathStep[];
+}
+
+export const learningPathApi = {
+  get: () => request<LearningPath>("/api/learning-path"),
+  setStepStatus: (key: string, status: "pending" | "done") =>
+    request<LearningPath>(`/api/learning-path/steps/${key}`, { method: "PATCH", body: JSON.stringify({ status }) }),
+};

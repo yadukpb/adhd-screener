@@ -1,4 +1,5 @@
-import type { Indicator, Level } from "@adhd-screener/core";
+import type { Indicator, Level, ReportCategory } from "@adhd-screener/core";
+import { REPORT_CATEGORIES, CATEGORY_KEYS } from "@adhd-screener/core";
 
 // Hand-written, not LLM-generated -- this is fixed, well-understood content
 // (what each indicator measures, in plain words), so a static mapping is
@@ -90,35 +91,15 @@ export function headlineForCounts(elevated: number, mild: number): string {
 // actual findings with the technical term + measured value named inline
 // (not hidden) instead of a two-sentence headline. ---
 
-interface Category {
-  title: string;
-  keys: string[];
-  /** One line of context for what this category of measures is getting at. */
-  blurb: string;
-}
-
-const CATEGORIES: Category[] = [
-  {
-    title: "Self-reported symptoms",
-    keys: ["asrs", "wurs"],
-    blurb: "What you reported about your own day-to-day (and childhood) attention and activity patterns.",
-  },
-  {
-    title: "Attention & focus",
-    keys: ["cpt-omission", "cpt-rtsd", "cpt-tau", "cpt-dprime"],
-    blurb: "How consistently you caught targets and stayed locked onto the focus task, measured a few different ways.",
-  },
-  {
-    title: "Impulse control",
-    keys: ["cpt-commission", "stop-ssrt"],
-    blurb: "How well you held back a reaction you weren't supposed to make, and how fast you could cancel one already underway.",
-  },
-  {
-    title: "Working memory",
-    keys: ["nback-dprime"],
-    blurb: "How well you kept track of recent information while the task kept moving.",
-  },
-];
+// The category -> indicator-key mapping itself lives in @adhd-screener/core
+// (CATEGORY_KEYS) since apps/api needs the same grouping to build a learning
+// path server-side; only the UI copy (the blurb) belongs here.
+const CATEGORY_BLURB: Record<ReportCategory, string> = {
+  "Self-reported symptoms": "What you reported about your own day-to-day (and childhood) attention and activity patterns.",
+  "Attention & focus": "How consistently you caught targets and stayed locked onto the focus task, measured a few different ways.",
+  "Impulse control": "How well you held back a reaction you weren't supposed to make, and how fast you could cancel one already underway.",
+  "Working memory": "How well you kept track of recent information while the task kept moving.",
+};
 
 function indicatorSentence(ind: Indicator): string {
   const friendly = FRIENDLY_LABEL[ind.key] ?? ind.label;
@@ -148,10 +129,10 @@ export interface DetailedReport {
 export function buildDetailedReport(indicators: Indicator[], previous?: Indicator[] | null): DetailedReport {
   const byKey = new Map(indicators.map((i) => [i.key, i]));
 
-  const sections: DetailedSection[] = CATEGORIES.map((cat) => ({
-    title: cat.title,
-    blurb: cat.blurb,
-    sentences: cat.keys.map((k) => byKey.get(k)).filter((i): i is Indicator => !!i).map(indicatorSentence),
+  const sections: DetailedSection[] = REPORT_CATEGORIES.map((cat) => ({
+    title: cat,
+    blurb: CATEGORY_BLURB[cat],
+    sentences: CATEGORY_KEYS[cat].map((k) => byKey.get(k)).filter((i): i is Indicator => !!i).map(indicatorSentence),
   })).filter((s) => s.sentences.length > 0);
 
   const elevated = indicators.filter((i) => i.level === "elevated").length;
@@ -189,15 +170,4 @@ export function buildDetailedReport(indicators: Indicator[], previous?: Indicato
 
 function rank(level: Level): number {
   return level === "typical" ? 0 : level === "mild" ? 1 : 2;
-}
-
-/** Category titles (matching Exercise["category"] in @adhd-screener/core) that have at least one mild/elevated indicator. */
-export function categoriesNeedingAttention(indicators: Indicator[]): string[] {
-  const byKey = new Map(indicators.map((i) => [i.key, i]));
-  return CATEGORIES.filter((cat) =>
-    cat.keys.some((k) => {
-      const ind = byKey.get(k);
-      return ind !== undefined && ind.level !== "typical";
-    }),
-  ).map((cat) => cat.title);
 }

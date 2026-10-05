@@ -27,9 +27,14 @@ export function NavBar() {
               Exercises
             </Link>
             {user && (
-              <Link to="/dashboard" className={navLinkClass}>
-                Dashboard
-              </Link>
+              <>
+                <Link to="/dashboard" className={navLinkClass}>
+                  Dashboard
+                </Link>
+                <Link to="/learning-path" className={navLinkClass}>
+                  My Path
+                </Link>
+              </>
             )}
           </nav>
 

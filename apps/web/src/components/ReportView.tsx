@@ -1,6 +1,6 @@
-import type { Indicator, Level } from "@adhd-screener/core";
-import { referenceById, exercisesForCategory, type Exercise } from "@adhd-screener/core";
-import { FRIENDLY_LABEL, FRIENDLY_LEVEL, friendlyBlurb, buildDetailedReport, categoriesNeedingAttention } from "../lib/plainLanguage";
+import type { Indicator, Level, Exercise } from "@adhd-screener/core";
+import { referenceById, exercisesForCategory, categoriesNeedingAttention } from "@adhd-screener/core";
+import { FRIENDLY_LABEL, FRIENDLY_LEVEL, friendlyBlurb, buildDetailedReport } from "../lib/plainLanguage";
 import { ExerciseCard } from "./ExerciseCard";
 
 const LEVEL_STYLES: Record<Level, { accent: string; badge: string }> = {
@@ -61,12 +61,7 @@ function IndicatorCard({ ind }: { ind: Indicator }) {
 export function ReportView({ indicators, previous }: { indicators: Indicator[]; previous?: Indicator[] | null }) {
   const report = buildDetailedReport(indicators, previous);
 
-  // categoriesNeedingAttention()'s titles are hand-matched to Exercise["category"]
-  // in @adhd-screener/core -- the library.test.ts suite checks every category
-  // has at least one exercise, which is what keeps this cast honest.
-  const suggestedExercises: Exercise[] = categoriesNeedingAttention(indicators).flatMap((cat) =>
-    exercisesForCategory(cat as Exercise["category"]),
-  );
+  const suggestedExercises: Exercise[] = categoriesNeedingAttention(indicators).flatMap((cat) => exercisesForCategory(cat));
 
   return (
     <div className="animate-fade-in space-y-8">

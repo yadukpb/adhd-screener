@@ -12,6 +12,7 @@ import {
 import { ScreeningSessionModel } from "../models/ScreeningSession";
 import { requireAuth, type AuthedRequest } from "../middleware/auth";
 import { asyncHandler } from "../asyncHandler";
+import { regenerateLearningPath } from "../services/learningPath";
 
 export const sessionsRouter = Router();
 sessionsRouter.use(requireAuth);
@@ -53,6 +54,17 @@ sessionsRouter.post("/", asyncHandler<AuthedRequest>(async (req, res) => {
     nback: session.nback,
     indicators,
   });
+
+  // Best-effort: the learning path is a secondary feature built on top of
+  // the session, not the other way around. If it fails for any reason, the
+  // person's actual result must still save -- same lesson as the earlier
+  // NaN-crashed-the-save bug, applied proactively here instead of waiting
+  // to hit it again.
+  try {
+    await regenerateLearningPath(req.userId!, doc._id.toString(), indicators);
+  } catch (err) {
+    console.error("[learning-path] failed to regenerate:", err);
+  }
 
   res.status(201).json(doc);
 }));
