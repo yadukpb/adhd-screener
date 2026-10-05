@@ -18,6 +18,9 @@ export function NavBar() {
           <Link to="/about-adhd" className="text-sm text-slate-300 hover:text-white">
             What is ADHD?
           </Link>
+          <Link to="/exercises" className="text-sm text-slate-300 hover:text-white">
+            Exercises
+          </Link>
           {user ? (
             <>
               <Link to="/dashboard" className="text-sm text-slate-300 hover:text-white">

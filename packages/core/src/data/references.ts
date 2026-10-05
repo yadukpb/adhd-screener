@@ -139,6 +139,34 @@ export const references: Reference[] = [
     finding: "Twin studies consistently estimate ADHD heritability around 70-80%, making it one of the most heritable conditions in psychiatry; no single gene is responsible, and common environmental explanations (parenting style, sugar, screen time) are not supported as primary causes.",
     usedFor: "The 'Learn about ADHD' page's causes section.",
   },
+  {
+    id: "gollwitzer1999",
+    cite: "Gollwitzer PM (1999). Implementation intentions: Strong effects of simple plans. American Psychologist 54(7):493-503.",
+    topic: "treatment",
+    finding: "Forming a specific if-then plan ('if situation X arises, I will do Y') substantially improves follow-through and self-regulation compared to a general goal intention alone, replicated across many self-regulation domains.",
+    usedFor: "exercises/library.ts -- the 'Pause-Plan' impulse-control exercise.",
+  },
+  {
+    id: "barkley1997",
+    cite: "Barkley RA (1997). Behavioral inhibition, sustained attention, and executive functions: constructing a unifying theory of ADHD. Psychological Bulletin 121(1):65-94.",
+    topic: "treatment",
+    finding: "ADHD involves impaired behavioral inhibition and executive self-regulation; 'externalizing' time, rules, and goals -- making them visible outside the head rather than held in mind -- compensates for weak internal self-regulation.",
+    usedFor: "exercises/library.ts -- the externalization basis of the focus-blocks and chunking exercises.",
+  },
+  {
+    id: "safren2005cbt",
+    cite: "Safren SA, Otto MW, Sprich S, Winett CL, Wilens TE, Biederman J (2005). Cognitive-behavioral therapy for ADHD in medication-treated adults with continued symptoms. Behaviour Research and Therapy 43(7):831-842.",
+    topic: "treatment",
+    finding: "A structured CBT program -- including organizational-skills training and breaking tasks into smaller steps -- significantly reduced ADHD symptoms and improved functioning in medication-treated adults with residual symptoms, versus a waitlist control.",
+    usedFor: "exercises/library.ts -- the 'Break It Down' task-breakdown exercise.",
+  },
+  {
+    id: "miller1956",
+    cite: "Miller GA (1956). The magical number seven, plus or minus two: some limits on our capacity for processing information. Psychological Review 63(2):81-97.",
+    topic: "treatment",
+    finding: "Working memory holds a small number of meaningful 'chunks' rather than raw items; grouping information into fewer, larger chunks reduces the load on working memory.",
+    usedFor: "exercises/library.ts -- the chunking step of the working-memory exercise.",
+  },
 ];
 
 export function referencesByTopic(topic: Reference["topic"]): Reference[] {

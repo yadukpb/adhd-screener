@@ -190,3 +190,14 @@ export function buildDetailedReport(indicators: Indicator[], previous?: Indicato
 function rank(level: Level): number {
   return level === "typical" ? 0 : level === "mild" ? 1 : 2;
 }
+
+/** Category titles (matching Exercise["category"] in @adhd-screener/core) that have at least one mild/elevated indicator. */
+export function categoriesNeedingAttention(indicators: Indicator[]): string[] {
+  const byKey = new Map(indicators.map((i) => [i.key, i]));
+  return CATEGORIES.filter((cat) =>
+    cat.keys.some((k) => {
+      const ind = byKey.get(k);
+      return ind !== undefined && ind.level !== "typical";
+    }),
+  ).map((cat) => cat.title);
+}

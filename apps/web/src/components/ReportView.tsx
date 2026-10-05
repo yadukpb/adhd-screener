@@ -1,6 +1,7 @@
 import type { Indicator, Level } from "@adhd-screener/core";
-import { referenceById } from "@adhd-screener/core";
-import { FRIENDLY_LABEL, FRIENDLY_LEVEL, friendlyBlurb, buildDetailedReport } from "../lib/plainLanguage";
+import { referenceById, exercisesForCategory, type Exercise } from "@adhd-screener/core";
+import { FRIENDLY_LABEL, FRIENDLY_LEVEL, friendlyBlurb, buildDetailedReport, categoriesNeedingAttention } from "../lib/plainLanguage";
+import { ExerciseCard } from "./ExerciseCard";
 
 const LEVEL_STYLES: Record<Level, { border: string; badge: string; dot: string }> = {
   typical: { border: "border-l-emerald-400", badge: "bg-emerald-400/10 text-emerald-300", dot: "bg-emerald-400" },
@@ -60,6 +61,13 @@ function IndicatorCard({ ind }: { ind: Indicator }) {
 export function ReportView({ indicators, previous }: { indicators: Indicator[]; previous?: Indicator[] | null }) {
   const report = buildDetailedReport(indicators, previous);
 
+  // categoriesNeedingAttention()'s titles are hand-matched to Exercise["category"]
+  // in @adhd-screener/core -- the library.test.ts suite checks every category
+  // has at least one exercise, which is what keeps this cast honest.
+  const suggestedExercises: Exercise[] = categoriesNeedingAttention(indicators).flatMap((cat) =>
+    exercisesForCategory(cat as Exercise["category"]),
+  );
+
   return (
     <div className="animate-fade-in">
       <div className="glass-card mb-6 p-6">
@@ -97,6 +105,21 @@ export function ReportView({ indicators, previous }: { indicators: Indicator[]; 
 
         <p className="mt-5 border-t border-white/5 pt-4 text-xs leading-relaxed text-slate-500">{report.disclaimer}</p>
       </div>
+
+      {suggestedExercises.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-lg font-bold text-white">Exercises to try</h2>
+          <p className="mt-1 text-sm text-slate-400">
+            Self-guided skill practice for the areas above that stood out today -- not therapy, and not a substitute for
+            it. Each is a real, cited technique; this just walks you through trying it.
+          </p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {suggestedExercises.map((ex) => (
+              <ExerciseCard key={ex.id} exercise={ex} />
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {indicators.map((ind) => (

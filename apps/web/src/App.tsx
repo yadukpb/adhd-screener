@@ -8,6 +8,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { ScreeningFlow } from "./pages/ScreeningFlow";
 import { ReportPage } from "./pages/ReportPage";
 import { LearnAboutAdhd } from "./pages/LearnAboutAdhd";
+import { Exercises } from "./pages/Exercises";
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/about-adhd" element={<LearnAboutAdhd />} />
+          <Route path="/exercises" element={<Exercises />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

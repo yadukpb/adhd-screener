@@ -17,3 +17,5 @@ export * from "./tasks/rng";
 export * from "./tasks/cpt";
 export * from "./tasks/stopSignal";
 export * from "./tasks/nback";
+
+export * from "./exercises/library";
