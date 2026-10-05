@@ -125,6 +125,20 @@ export const references: Reference[] = [
     finding: "Untreated childhood ADHD predicts significantly worse educational attainment, employment stability, and relationship outcomes in young adulthood versus controls.",
     usedFor: "Motivational framing in ui/report.ts for 'elevated' results to seek clinical follow-up.",
   },
+  {
+    id: "dsm5tr",
+    cite: "American Psychiatric Association (2022). Diagnostic and Statistical Manual of Mental Disorders, 5th Edition, Text Revision (DSM-5-TR). Washington, DC: APA Publishing.",
+    topic: "consensus",
+    finding: "Defines ADHD's three presentations (predominantly inattentive, predominantly hyperactive-impulsive, combined) and the criteria a diagnosis requires: several symptoms present before age 12, clear impairment in two or more settings, and symptoms not better explained by another condition.",
+    usedFor: "The 'Learn about ADHD' page's definition and diagnostic-criteria sections.",
+  },
+  {
+    id: "faraone2019genetics",
+    cite: "Faraone SV, Larsson H (2019). Genetics of attention deficit hyperactivity disorder. Molecular Psychiatry 24(4):562-575.",
+    topic: "genetics",
+    finding: "Twin studies consistently estimate ADHD heritability around 70-80%, making it one of the most heritable conditions in psychiatry; no single gene is responsible, and common environmental explanations (parenting style, sugar, screen time) are not supported as primary causes.",
+    usedFor: "The 'Learn about ADHD' page's causes section.",
+  },
 ];
 
 export function referencesByTopic(topic: Reference["topic"]): Reference[] {

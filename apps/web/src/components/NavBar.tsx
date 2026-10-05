@@ -15,6 +15,9 @@ export function NavBar() {
           ADHD Screener
         </Link>
         <nav className="flex items-center gap-3">
+          <Link to="/about-adhd" className="text-sm text-slate-300 hover:text-white">
+            What is ADHD?
+          </Link>
           {user ? (
             <>
               <Link to="/dashboard" className="text-sm text-slate-300 hover:text-white">
