@@ -1,16 +1,11 @@
 import type { Indicator, Level } from "@adhd-screener/core";
 import { referenceById } from "@adhd-screener/core";
+import { FRIENDLY_LABEL, FRIENDLY_LEVEL, friendlyBlurb, overallSummary } from "../lib/plainLanguage";
 
-const LEVEL_LABEL: Record<Level, string> = {
-  typical: "Typical range",
-  mild: "Mildly elevated",
-  elevated: "Elevated",
-};
-
-const LEVEL_STYLES: Record<Level, { border: string; badge: string }> = {
-  typical: { border: "border-l-emerald-400", badge: "bg-emerald-400/10 text-emerald-300" },
-  mild: { border: "border-l-amber-400", badge: "bg-amber-400/10 text-amber-300" },
-  elevated: { border: "border-l-rose-400", badge: "bg-rose-400/10 text-rose-300" },
+const LEVEL_STYLES: Record<Level, { border: string; badge: string; dot: string }> = {
+  typical: { border: "border-l-emerald-400", badge: "bg-emerald-400/10 text-emerald-300", dot: "bg-emerald-400" },
+  mild: { border: "border-l-amber-400", badge: "bg-amber-400/10 text-amber-300", dot: "bg-amber-400" },
+  elevated: { border: "border-l-rose-400", badge: "bg-rose-400/10 text-rose-300", dot: "bg-rose-400" },
 };
 
 const REGION_LABEL: Record<string, string> = {
@@ -30,60 +25,55 @@ function IndicatorCard({ ind }: { ind: Indicator }) {
   return (
     <article className={`glass-card border-l-4 p-5 ${styles.border}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-semibold text-slate-100">{ind.label}</h3>
-        <span className={`rounded-full px-3 py-1 text-xs font-medium ${styles.badge}`}>{LEVEL_LABEL[ind.level]}</span>
+        <h3 className="font-semibold text-slate-100">{FRIENDLY_LABEL[ind.key] ?? ind.label}</h3>
+        <span className={`rounded-full px-3 py-1 text-xs font-medium ${styles.badge}`}>{FRIENDLY_LEVEL[ind.level]}</span>
       </div>
-      <p className="mt-2 font-mono text-sm text-slate-400">
-        {ind.valueText}
-        {ind.z !== null && <span className="text-slate-500"> &middot; z = {ind.z.toFixed(2)}</span>}
-      </p>
-      <p className="mt-3 text-sm leading-relaxed text-slate-300">{ind.meaning}</p>
-      {ind.regions.length > 0 && (
-        <p className="mt-3 text-xs text-slate-500">Associated regions: {ind.regions.map((r) => REGION_LABEL[r] ?? r).join(", ")}</p>
-      )}
-      <details className="mt-3 text-xs text-slate-500">
-        <summary className="cursor-pointer select-none text-slate-400 hover:text-slate-300">Sources</summary>
-        <ul className="mt-2 list-disc space-y-1 pl-4">
-          {ind.refs.map((id) => (
-            <li key={id}>{referenceById(id)?.cite ?? id}</li>
-          ))}
-        </ul>
+      <p className="mt-3 text-sm leading-relaxed text-slate-300">{friendlyBlurb(ind)}</p>
+
+      <details className="group mt-4 border-t border-white/5 pt-3">
+        <summary className="cursor-pointer select-none text-xs font-medium text-slate-500 hover:text-slate-300">
+          Show technical details
+        </summary>
+        <div className="mt-3 space-y-3 text-xs">
+          <p className="font-mono text-slate-400">
+            {ind.label}: {ind.valueText}
+            {ind.z !== null && <span className="text-slate-500"> &middot; z = {ind.z.toFixed(2)}</span>}
+          </p>
+          <p className="text-slate-500">{ind.meaning}</p>
+          {ind.regions.length > 0 && (
+            <p className="text-slate-500">Associated regions: {ind.regions.map((r) => REGION_LABEL[r] ?? r).join(", ")}</p>
+          )}
+          <div>
+            <p className="mb-1 text-slate-500">Sources:</p>
+            <ul className="list-disc space-y-1 pl-4 text-slate-500">
+              {ind.refs.map((id) => (
+                <li key={id}>{referenceById(id)?.cite ?? id}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </details>
     </article>
   );
 }
 
-export function ReportView({ indicators }: { indicators: Indicator[] }) {
-  const elevated = indicators.filter((i) => i.level === "elevated").length;
-  const mild = indicators.filter((i) => i.level === "mild").length;
+export function ReportView({ indicators, previous }: { indicators: Indicator[]; previous?: Indicator[] | null }) {
+  const summaryLines = overallSummary(indicators, previous);
 
   return (
     <div className="animate-fade-in">
-      <div className="glass-card mb-6 p-5">
-        <p className="text-slate-300">
-          <span className="font-semibold text-rose-300">{elevated}</span> elevated and{" "}
-          <span className="font-semibold text-amber-300">{mild}</span> mildly elevated, out of {indicators.length} measured.
-        </p>
+      <div className="glass-card mb-6 space-y-2 p-6">
+        {summaryLines.map((line, i) => (
+          <p key={i} className={i === 0 ? "text-lg font-semibold text-slate-100" : "text-sm text-slate-400"}>
+            {line}
+          </p>
+        ))}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {indicators.map((ind) => (
           <IndicatorCard key={ind.key} ind={ind} />
         ))}
-      </div>
-
-      <div className="glass-card mt-6 space-y-3 p-5 text-sm leading-relaxed text-slate-400">
-        <p className="font-semibold text-slate-200">This is a research-based screening aid, not a diagnosis.</p>
-        <p>
-          ADHD diagnosis requires a clinical interview against DSM-5/ICD-11 criteria, developmental history, and evidence of
-          impairment across settings -- no questionnaire or reaction-time task, including this one, is diagnostic on its own.
-          If several indicators above are elevated, consider discussing this report with a clinician.
-        </p>
-        <p>
-          This tool implements its own simplified versions of these tasks in the browser -- it is not a clinically normed
-          instrument, and comparison values are literature-informed estimates, not exact normative tables. See each
-          indicator's sources for what is and isn't established.
-        </p>
       </div>
     </div>
   );

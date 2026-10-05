@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { sessionsApi, type SessionSummary } from "../lib/api";
 import { TrendChart } from "../components/TrendChart";
 import { useAuth } from "../hooks/useAuth";
+import { headlineForCounts } from "../lib/plainLanguage";
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -43,6 +44,8 @@ export function Dashboard() {
             {[...sessions].reverse().map((s) => {
               const elevated = s.indicators.filter((i) => i.level === "elevated").length;
               const mild = s.indicators.filter((i) => i.level === "mild").length;
+              const headline = headlineForCounts(elevated, mild);
+              const color = elevated > 0 ? "text-rose-300" : mild > 0 ? "text-amber-300" : "text-emerald-300";
               return (
                 <Link
                   key={s._id}
@@ -50,12 +53,7 @@ export function Dashboard() {
                   className="flex items-center justify-between px-5 py-4 transition hover:bg-white/5"
                 >
                   <span className="text-slate-200">{new Date(s.createdAt).toLocaleString()}</span>
-                  <span className="text-sm text-slate-500">
-                    {elevated > 0 && <span className="text-rose-300">{elevated} elevated</span>}
-                    {elevated > 0 && mild > 0 && " · "}
-                    {mild > 0 && <span className="text-amber-300">{mild} mild</span>}
-                    {elevated === 0 && mild === 0 && <span className="text-emerald-300">All typical</span>}
-                  </span>
+                  <span className={`text-sm ${color}`}>{headline}</span>
                 </Link>
               );
             })}

@@ -1,5 +1,6 @@
 import { CartesianGrid, Legend, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { SessionSummary } from "../lib/api";
+import { FRIENDLY_LABEL } from "../lib/plainLanguage";
 
 // A small, print-stable categorical palette -- distinct hues at matched
 // lightness so lines stay distinguishable without relying on color alone
@@ -19,7 +20,7 @@ export function TrendChart({ sessions }: { sessions: SessionSummary[] }) {
   const keys = new Map<string, string>();
   for (const s of sessions) {
     for (const ind of s.indicators) {
-      if (ind.z !== null) keys.set(ind.key, ind.label);
+      if (ind.z !== null) keys.set(ind.key, FRIENDLY_LABEL[ind.key] ?? ind.label);
     }
   }
 
@@ -37,9 +38,9 @@ export function TrendChart({ sessions }: { sessions: SessionSummary[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="mb-1 font-semibold text-slate-100">Objective indicators over time</h3>
+      <h3 className="mb-1 font-semibold text-slate-100">Your trend over time</h3>
       <p className="mb-4 text-xs text-slate-500">
-        z-score vs. reference norm. Above the dashed line at 1 is "mildly elevated", above 2 is "elevated".
+        Lower is closer to typical. Above the yellow line is worth watching; above the red line is notably different.
       </p>
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -10 }}>

@@ -6,13 +6,27 @@ import { ReportView } from "../components/ReportView";
 export function ReportPage() {
   const { id } = useParams<{ id: string }>();
   const [session, setSession] = useState<SessionSummary | null>(null);
+  const [previous, setPrevious] = useState<SessionSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
+    setSession(null);
+    setPrevious(null);
+    setError(null);
+
     sessionsApi
       .get(id)
-      .then(setSession)
+      .then(async (current) => {
+        setSession(current);
+        try {
+          const all = await sessionsApi.list(); // ascending by createdAt
+          const idx = all.findIndex((s) => s._id === current._id);
+          if (idx > 0) setPrevious(all[idx - 1]);
+        } catch {
+          // Comparison line is a nice-to-have -- don't block the report on it.
+        }
+      })
       .catch((err) => setError(err instanceof ApiError ? err.message : "Could not load this report"));
   }, [id]);
 
@@ -34,7 +48,7 @@ export function ReportPage() {
           Back to dashboard
         </Link>
       </div>
-      <ReportView indicators={session.indicators} />
+      <ReportView indicators={session.indicators} previous={previous?.indicators} />
     </div>
   );
 }
