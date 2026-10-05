@@ -1,10 +1,11 @@
 /**
  * Seeds realistic screening sessions for an existing user, run through the
  * exact same scoring pipeline as POST /api/sessions (summarize* +
- * computeIndicators from @adhd-screener/core), so the data is representative
- * of a real completed run -- not hand-faked indicator numbers. Backdates
- * createdAt across a few weeks so the dashboard's trend chart has something
- * to show.
+ * computeIndicators from @adhd-screener/core, then regenerateLearningPath),
+ * so the data -- including the resulting learning path -- is representative
+ * of a real completed run, not hand-faked. Backdates createdAt across a few
+ * weeks so the dashboard's trend chart has something to show, and marks a
+ * couple of learning-path steps done so "My Path" doesn't look untouched.
  *
  * Usage: npx tsx scripts/seed-demo-sessions.ts <email> [--clear]
  */
@@ -13,6 +14,8 @@ import mongoose from "mongoose";
 import { connectDb } from "../src/db";
 import { UserModel } from "../src/models/User";
 import { ScreeningSessionModel } from "../src/models/ScreeningSession";
+import { LearningPathModel } from "../src/models/LearningPath";
+import { regenerateLearningPath } from "../src/services/learningPath";
 import { summarizeCpt, summarizeStop, summarizeNback, computeIndicators } from "@adhd-screener/core";
 import type { CptTrial, StopTrial, NbackTrial, Session } from "@adhd-screener/core";
 import { mulberry32 } from "@adhd-screener/core";
@@ -132,7 +135,8 @@ async function main() {
 
   if (shouldClear) {
     const { deletedCount } = await ScreeningSessionModel.deleteMany({ user: user._id });
-    console.log(`Cleared ${deletedCount} existing session(s) for ${email}`);
+    await LearningPathModel.deleteMany({ user: user._id });
+    console.log(`Cleared ${deletedCount} existing session(s) + learning path for ${email}`);
   }
 
   for (const [i, profile] of profiles.entries()) {
@@ -148,7 +152,7 @@ async function main() {
     const indicators = computeIndicators(session);
 
     const createdAt = new Date(Date.now() - profile.daysAgo * 24 * 60 * 60 * 1000);
-    await ScreeningSessionModel.create([
+    const [doc] = await ScreeningSessionModel.create([
       {
         user: user._id,
         asrs: session.asrs,
@@ -162,9 +166,27 @@ async function main() {
       },
     ]);
 
+    // Same call POST /api/sessions makes -- the path regenerates and merges
+    // after every seeded session exactly like it would for a real run.
+    await regenerateLearningPath(user._id.toString(), doc._id.toString(), indicators);
+
     const elevated = indicators.filter((x) => x.level === "elevated").length;
     const mild = indicators.filter((x) => x.level === "mild").length;
     console.log(`Seeded "${profile.label}" (${createdAt.toISOString().slice(0, 10)}): ${elevated} elevated, ${mild} mild`);
+  }
+
+  // Mark a couple of steps done partway through, so the final path looks
+  // like someone who's actually been working through it, not a fresh
+  // untouched list -- purely cosmetic for the demo.
+  const path = await LearningPathModel.findOne({ user: user._id });
+  if (path && path.steps.length > 0) {
+    const toComplete = path.steps.slice(0, Math.min(2, path.steps.length));
+    for (const step of toComplete) {
+      step.status = "done";
+      step.completedAt = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+    }
+    await path.save();
+    console.log(`Marked ${toComplete.length} learning-path step(s) done: ${toComplete.map((s) => s.key).join(", ")}`);
   }
 
   await mongoose.disconnect();
