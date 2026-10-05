@@ -28,19 +28,19 @@ export function Register() {
 
   return (
     <div className="mx-auto max-w-sm px-4 py-16 animate-slide-up">
-      <h1 className="text-2xl font-bold text-white">Create your account</h1>
+      <h1 className="text-2xl font-bold text-heading">Create your account</h1>
       <form onSubmit={onSubmit} className="glass-card mt-6 space-y-4 p-6">
-        {error && <p className="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-300">{error}</p>}
+        {error && <p className="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-300">{error}</p>}
         <div>
-          <label className="mb-1 block text-sm text-slate-400">Name</label>
+          <label className="mb-1 block text-sm text-subtle">Name</label>
           <input className="input-field" required value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-slate-400">Email</label>
+          <label className="mb-1 block text-sm text-subtle">Email</label>
           <input className="input-field" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div>
-          <label className="mb-1 block text-sm text-slate-400">Password</label>
+          <label className="mb-1 block text-sm text-subtle">Password</label>
           <input
             className="input-field"
             type="password"
@@ -49,15 +49,15 @@ export function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <p className="mt-1 text-xs text-slate-500">At least 8 characters.</p>
+          <p className="mt-1 text-xs text-faint">At least 8 characters.</p>
         </div>
         <button className="btn-primary w-full" disabled={submitting}>
           {submitting ? "Creating account..." : "Create account"}
         </button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-500">
+      <p className="mt-4 text-center text-sm text-subtle">
         Already have an account?{" "}
-        <Link to="/login" className="text-brand-400 hover:underline">
+        <Link to="/login" className="text-brand-600 hover:underline dark:text-brand-400">
           Sign in
         </Link>
       </p>

@@ -31,18 +31,18 @@ export function ReportPage() {
   }, [id]);
 
   if (error) {
-    return <div className="py-24 text-center text-rose-400">{error}</div>;
+    return <div className="py-24 text-center text-rose-600 dark:text-rose-400">{error}</div>;
   }
   if (!session) {
-    return <div className="py-24 text-center text-slate-500">Loading report...</div>;
+    return <div className="py-24 text-center text-subtle">Loading report...</div>;
   }
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-white">Your Results</h1>
-          <p className="text-sm text-slate-500">{new Date(session.createdAt).toLocaleString()}</p>
+          <h1 className="text-2xl font-bold text-heading">Your Results</h1>
+          <p className="text-sm text-subtle">{new Date(session.createdAt).toLocaleString()}</p>
         </div>
         <Link to="/dashboard" className="btn-secondary px-4 py-2 text-sm">
           Back to dashboard

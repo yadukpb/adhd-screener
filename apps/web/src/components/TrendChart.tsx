@@ -10,7 +10,7 @@ const LINE_COLORS = ["#818cf8", "#34d399", "#fbbf24", "#f472b6", "#38bdf8", "#a7
 export function TrendChart({ sessions }: { sessions: SessionSummary[] }) {
   if (sessions.length < 2) {
     return (
-      <div className="glass-card p-6 text-center text-slate-400">
+      <div className="glass-card p-6 text-center text-subtle">
         Complete at least 2 screenings to see your trend over time.
       </div>
     );
@@ -38,17 +38,25 @@ export function TrendChart({ sessions }: { sessions: SessionSummary[] }) {
 
   return (
     <div className="glass-card p-5">
-      <h3 className="mb-1 font-semibold text-slate-100">Your trend over time</h3>
-      <p className="mb-4 text-xs text-slate-500">
+      <h3 className="mb-1 font-semibold text-heading">Your trend over time</h3>
+      <p className="mb-4 text-xs text-faint">
         Lower is closer to typical. Above the yellow line is worth watching; above the red line is notably different.
       </p>
       <ResponsiveContainer width="100%" height={320}>
         <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: -10 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.1)" />
-          <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
-          <YAxis stroke="#64748b" fontSize={12} />
-          <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8 }} />
-          <Legend wrapperStyle={{ fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
+          <XAxis dataKey="date" stroke="var(--chart-axis)" fontSize={12} />
+          <YAxis stroke="var(--chart-axis)" fontSize={12} />
+          <Tooltip
+            contentStyle={{
+              background: "var(--chart-tooltip-bg)",
+              border: "1px solid var(--chart-tooltip-border)",
+              borderRadius: 8,
+            }}
+            labelStyle={{ color: "var(--chart-tooltip-text)" }}
+            itemStyle={{ color: "var(--chart-tooltip-text)" }}
+          />
+          <Legend wrapperStyle={{ fontSize: 12, color: "var(--chart-tooltip-text)" }} />
           <ReferenceLine y={1} stroke="#fbbf24" strokeDasharray="4 4" />
           <ReferenceLine y={2} stroke="#f87171" strokeDasharray="4 4" />
           {keyList.map(([key, label], i) => (

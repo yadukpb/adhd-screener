@@ -4,7 +4,7 @@ import { referenceById, referencesByTopic, type Reference } from "@adhd-screener
 
 function SourceList({ ids }: { ids: string[] }) {
   return (
-    <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-slate-500">
+    <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-faint">
       {ids.map((id) => (
         <li key={id}>{referenceById(id)?.cite ?? id}</li>
       ))}
@@ -15,8 +15,8 @@ function SourceList({ ids }: { ids: string[] }) {
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
     <section id={id} className="glass-card scroll-mt-20 p-6 sm:p-8">
-      <h2 className="text-xl font-bold text-white">{title}</h2>
-      <div className="mt-3 space-y-4 text-[15px] leading-relaxed text-slate-300">{children}</div>
+      <h2 className="text-xl font-bold text-heading">{title}</h2>
+      <div className="mt-3 space-y-4 text-[15px] leading-relaxed text-body">{children}</div>
     </section>
   );
 }
@@ -39,11 +39,11 @@ export function LearnAboutAdhd() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 animate-fade-in">
       <div className="mb-8">
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-brand-300">
+        <span className="rounded-full border border-subtle bg-inset px-3 py-1 text-xs font-medium text-brand-600 dark:text-brand-300">
           Reference &middot; not personalized
         </span>
-        <h1 className="mt-4 text-3xl font-extrabold text-white sm:text-4xl">What is ADHD?</h1>
-        <p className="mt-3 max-w-xl text-slate-400">
+        <h1 className="mt-4 text-3xl font-extrabold text-heading sm:text-4xl">What is ADHD?</h1>
+        <p className="mt-3 max-w-xl text-subtle">
           An in-depth look at the condition this screener is built around -- what it is, what the research actually shows
           about its causes and the brain, how it's really diagnosed, and what gets treated once it is. Every claim here
           is traced to a source at the bottom of its section, the same standard the rest of this app holds itself to.
@@ -51,11 +51,11 @@ export function LearnAboutAdhd() {
       </div>
 
       <nav className="glass-card mb-8 p-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">On this page</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-faint">On this page</p>
         <ul className="grid gap-1 sm:grid-cols-2">
           {TOC.map((t) => (
             <li key={t.id}>
-              <a href={`#${t.id}`} className="text-sm text-brand-300 hover:underline">
+              <a href={`#${t.id}`} className="text-sm text-brand-600 hover:underline dark:text-brand-300">
                 {t.label}
               </a>
             </li>
@@ -222,7 +222,7 @@ export function LearnAboutAdhd() {
             </li>
             <li>
               <strong>"A quiz like this one can diagnose it."</strong> It can't, and this app says so on every page --
-              see <Link to="/dashboard" className="text-brand-300 hover:underline">your report</Link> for what it can
+              see <Link to="/dashboard" className="text-brand-600 hover:underline dark:text-brand-300">your report</Link> for what it can
               actually tell you.
             </li>
           </ul>

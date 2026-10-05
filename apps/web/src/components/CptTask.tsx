@@ -49,12 +49,12 @@ export function CptTask({ onComplete }: Props) {
 export function Instructions({ title, bullets, onStart }: { title: string; bullets: string[]; onStart: () => void }) {
   return (
     <div className="mx-auto max-w-lg animate-fade-in text-center">
-      <h2 className="text-2xl font-bold text-white">{title}</h2>
+      <h2 className="text-2xl font-bold text-heading">{title}</h2>
       <div className="glass-card mt-6 p-6 text-left">
-        <ul className="space-y-3 text-slate-300">
+        <ul className="space-y-3 text-body">
           {bullets.map((b) => (
             <li key={b} className="flex gap-2">
-              <span className="text-brand-400">&#8226;</span>
+              <span className="text-brand-500 dark:text-brand-400">&#8226;</span>
               <span>{b}</span>
             </li>
           ))}
@@ -70,8 +70,8 @@ export function Instructions({ title, bullets, onStart }: { title: string; bulle
 export function TaskShell({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="mx-auto max-w-lg animate-fade-in text-center">
-      <p className="mb-3 text-sm uppercase tracking-wide text-slate-500">{label}</p>
-      <div className="glass-card flex h-64 items-center justify-center text-6xl font-extrabold text-white">{children}</div>
+      <p className="mb-3 text-sm uppercase tracking-wide text-subtle">{label}</p>
+      <div className="glass-card flex h-64 items-center justify-center text-6xl font-extrabold text-heading">{children}</div>
     </div>
   );
 }

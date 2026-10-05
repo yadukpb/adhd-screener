@@ -50,8 +50,8 @@ export function ScreeningFlow() {
   if (step === "intro") {
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center animate-slide-up">
-        <h1 className="text-2xl font-bold text-white">New Screening</h1>
-        <p className="mt-3 text-slate-400">
+        <h1 className="text-2xl font-bold text-heading">New Screening</h1>
+        <p className="mt-3 text-subtle">
           This takes about 10 minutes: two short questionnaires, then three brief computer tasks measuring attention,
           response inhibition, and working memory.
         </p>
@@ -126,7 +126,7 @@ export function ScreeningFlow() {
     return (
       <div className="px-4 py-12">
         {error && (
-          <p className="mx-auto mb-4 max-w-lg rounded-lg bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-300">
+          <p className="mx-auto mb-4 max-w-lg rounded-lg bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-600 dark:text-rose-300">
             {error}
           </p>
         )}
@@ -140,5 +140,5 @@ export function ScreeningFlow() {
     );
   }
 
-  return <div className="py-24 text-center text-slate-400">Scoring your results...</div>;
+  return <div className="py-24 text-center text-subtle">Scoring your results...</div>;
 }

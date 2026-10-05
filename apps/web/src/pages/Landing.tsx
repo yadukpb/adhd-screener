@@ -6,13 +6,13 @@ export function Landing() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-20 text-center animate-slide-up">
-      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-brand-300">
+      <span className="rounded-full border border-subtle bg-inset px-3 py-1 text-xs font-medium text-brand-600 dark:text-brand-300">
         Research-based screening aid &middot; Not a diagnosis
       </span>
-      <h1 className="mt-6 bg-gradient-to-br from-white to-slate-400 bg-clip-text text-4xl font-extrabold text-transparent sm:text-5xl">
+      <h1 className="mt-6 bg-gradient-to-br from-slate-900 to-slate-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-white dark:to-slate-400 sm:text-5xl">
         Understand your attention, inhibition, and working memory
       </h1>
-      <p className="mx-auto mt-4 max-w-xl text-slate-400">
+      <p className="mx-auto mt-4 max-w-xl text-subtle">
         Two validated questionnaires and three short computer tasks, scored against literature-informed norms with every
         claim traced to a citation. Track how your indicators move over time.
       </p>
@@ -34,8 +34,8 @@ export function Landing() {
           { title: "Your trend over time", body: "Every result is saved to your account so you can see each indicator move across repeated screenings." },
         ].map((f) => (
           <div key={f.title} className="glass-card p-5">
-            <h3 className="font-semibold text-slate-100">{f.title}</h3>
-            <p className="mt-2 text-sm text-slate-400">{f.body}</p>
+            <h3 className="font-semibold text-heading">{f.title}</h3>
+            <p className="mt-2 text-sm text-subtle">{f.body}</p>
           </div>
         ))}
       </div>
