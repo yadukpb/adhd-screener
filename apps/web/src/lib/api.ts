@@ -108,6 +108,17 @@ export interface PracticeEntry {
   completedActions?: string[];
   nextAction?: string;
   taskComplete?: boolean;
+  // time-estimation-trainer
+  estimatedMinutes?: number;
+  actualSeconds?: number;
+  // mindful-pause
+  durationSeconds?: number;
+  noticedUrge?: boolean;
+  note?: string;
+  // thought-record (situation is shared with pause-plan above)
+  automaticThought?: string;
+  evidence?: string;
+  reframe?: string;
 }
 
 export const practiceApi = {

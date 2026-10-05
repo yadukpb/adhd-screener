@@ -84,6 +84,54 @@ export const exercises: Exercise[] = [
     ],
     refs: ["safren2005cbt"],
   },
+  {
+    id: "time-estimation-trainer",
+    category: "Attention & focus",
+    title: "Time Estimation Trainer",
+    technique: "Estimate-vs-actual calibration (targets 'time blindness')",
+    summary:
+      "ADHD is linked to measurable deficits in estimating and reproducing time durations -- not just 'losing track of time' casually, but a specific, studied executive-function gap. Repeatedly comparing your own estimate to the actual time a task takes is a direct way to train that calibration.",
+    steps: [
+      "Before starting a task, guess how many minutes it will actually take you.",
+      "Start the timer and begin the task.",
+      "Stop the timer the moment you actually finish -- don't round up or down in your head first.",
+      "Look at your estimate next to the real time. Don't judge it, just notice the gap.",
+      "Do this for a few different tasks over the next week. Most people's estimates get more accurate with repeated, honest comparison -- that's the actual skill being trained.",
+    ],
+    refs: ["barkley1997time"],
+  },
+  {
+    id: "mindful-pause",
+    category: "Impulse control",
+    title: "Mindful Pause",
+    technique: "Brief mindfulness practice (noticing an urge without acting on it)",
+    summary:
+      "A short mindfulness practice -- noticing an urge or a wandering thought and letting it pass without immediately reacting -- was feasible and showed early improvements in attention and self-reported symptoms in an 8-week ADHD-specific program. This is a much shorter version of the same core skill: noticing before reacting.",
+    steps: [
+      "Sit somewhere you won't be interrupted for about a minute.",
+      "Close your eyes or soften your gaze, and just notice your breathing -- don't try to change it.",
+      "When a thought, urge, or distraction shows up (it will), just notice it's there, without judging it or acting on it.",
+      "Gently bring your attention back to your breathing. Expect to do this many times in one minute -- that's normal, not failure.",
+      "When the minute ends, notice: did you catch yourself about to react to something, even once, without actually reacting?",
+    ],
+    refs: ["zylowska2008mindfulness"],
+  },
+  {
+    id: "thought-record",
+    category: "Self-reported symptoms",
+    title: "Thought Record",
+    technique: "Cognitive restructuring (a module of CBT for adult ADHD)",
+    summary:
+      "ADHD often comes with a running undercurrent of self-critical thoughts (\"I'm lazy,\" \"I'm broken\") built up from years of struggling with things that seem to come easily to others. Cognitive restructuring -- a structured module in evidence-based CBT for adult ADHD -- is the practice of catching one of these thoughts and actually examining whether it holds up.",
+    steps: [
+      "Write down a specific situation from today that triggered a self-critical thought (e.g. \"missed a deadline again\").",
+      "Write the automatic thought exactly as it occurred to you (e.g. \"I always mess things up\").",
+      "Ask: what's the actual evidence against this thought being 100% true? Be specific and factual, not reassuring.",
+      "Write a more balanced version of the thought -- not a forced positive, just a more accurate one (e.g. \"I missed this one deadline, and I've met plenty of others\").",
+      "Notice whether the balanced version feels even slightly different to hold than the original one did.",
+    ],
+    refs: ["safren2005cbt"],
+  },
 ];
 
 export function exercisesForCategory(category: Exercise["category"]): Exercise[] {

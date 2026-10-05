@@ -1,8 +1,8 @@
 import { Schema, model, type InferSchemaType } from "mongoose";
 
-// One flexible-but-typed schema backing all 4 interactive exercise tools --
+// One flexible-but-typed schema backing all 7 interactive exercise tools --
 // each tool only ever populates the subset of fields relevant to it (the
-// route layer enforces that per exerciseId), rather than 4 near-identical
+// route layer enforces that per exerciseId), rather than 7 near-identical
 // schemas for what's fundamentally the same "a user did a practice attempt,
 // with some structured detail" shape.
 const chunkItemSchema = new Schema({ text: { type: String, required: true }, done: { type: Boolean, default: false } }, { _id: false });
@@ -33,6 +33,20 @@ const practiceEntrySchema = new Schema(
     completedActions: { type: [String], default: undefined },
     nextAction: { type: String },
     taskComplete: { type: Boolean },
+
+    // time-estimation-trainer
+    estimatedMinutes: { type: Number },
+    actualSeconds: { type: Number },
+
+    // mindful-pause
+    durationSeconds: { type: Number },
+    noticedUrge: { type: Boolean },
+    note: { type: String },
+
+    // thought-record (situation is shared with pause-plan above)
+    automaticThought: { type: String },
+    evidence: { type: String },
+    reframe: { type: String },
   },
   { timestamps: true },
 );

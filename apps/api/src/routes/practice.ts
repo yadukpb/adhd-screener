@@ -6,7 +6,15 @@ import { asyncHandler } from "../asyncHandler";
 export const practiceRouter = Router();
 practiceRouter.use(requireAuth);
 
-const KNOWN_EXERCISE_IDS = ["pause-plan", "externalized-focus-blocks", "chunk-and-externalize", "break-it-down"];
+const KNOWN_EXERCISE_IDS = [
+  "pause-plan",
+  "externalized-focus-blocks",
+  "chunk-and-externalize",
+  "break-it-down",
+  "time-estimation-trainer",
+  "mindful-pause",
+  "thought-record",
+];
 
 practiceRouter.post(
   "/",
