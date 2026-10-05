@@ -114,7 +114,7 @@ export function ReportView({ indicators, previous }: { indicators: Indicator[]; 
           </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {suggestedExercises.map((ex) => (
-              <ExerciseCard key={ex.id} exercise={ex} />
+              <ExerciseCard key={ex.id} exercise={ex} interactive />
             ))}
           </div>
         </div>

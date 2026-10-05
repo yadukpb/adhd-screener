@@ -6,6 +6,7 @@ import { connectDb } from "./db";
 import { authRouter } from "./routes/auth";
 import { sessionsRouter } from "./routes/sessions";
 import { learningPathRouter } from "./routes/learningPath";
+import { practiceRouter } from "./routes/practice";
 
 const PORT = Number(process.env.PORT ?? 4000);
 const MONGODB_URI = process.env.MONGODB_URI ?? "mongodb://localhost:27017/adhd-screener";
@@ -20,6 +21,7 @@ app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/learning-path", learningPathRouter);
+app.use("/api/practice", practiceRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

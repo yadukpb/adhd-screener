@@ -1,13 +1,16 @@
 import type { Exercise } from "@adhd-screener/core";
 import { referenceById } from "@adhd-screener/core";
+import { ExercisePracticeTool } from "./practice/ExercisePracticeTool";
 
 interface Props {
   exercise: Exercise;
   /** When provided, shows a done/pending toggle in the card header -- used by the learning path, omitted everywhere else (the report, the standalone library). */
   progress?: { done: boolean; onToggle: () => void };
+  /** Shows the actual working tool (timer, saved plans, checklist, etc.), not just the written steps. Only pass this from logged-in pages -- the public /exercises library has no user to save practice entries against. */
+  interactive?: boolean;
 }
 
-export function ExerciseCard({ exercise, progress }: Props) {
+export function ExerciseCard({ exercise, progress, interactive }: Props) {
   return (
     <article
       className={`glass-card border-l-4 p-5 ${
@@ -42,6 +45,8 @@ export function ExerciseCard({ exercise, progress }: Props) {
           </li>
         ))}
       </ol>
+
+      {interactive && <ExercisePracticeTool exerciseId={exercise.id} />}
 
       <details className="mt-4 border-t border-faint pt-3 text-xs text-faint">
         <summary className="cursor-pointer select-none hover:text-heading">Sources</summary>

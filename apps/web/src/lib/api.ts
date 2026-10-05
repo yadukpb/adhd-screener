@@ -80,3 +80,40 @@ export const learningPathApi = {
   setStepStatus: (key: string, status: "pending" | "done") =>
     request<LearningPath>(`/api/learning-path/steps/${key}`, { method: "PATCH", body: JSON.stringify({ status }) }),
 };
+
+export interface ChunkItem {
+  text: string;
+  done: boolean;
+}
+
+export interface PracticeEntry {
+  _id: string;
+  exerciseId: string;
+  createdAt: string;
+  // pause-plan
+  situation?: string;
+  action?: string;
+  used?: boolean;
+  // externalized-focus-blocks
+  taskName?: string;
+  durationMinutes?: number;
+  doneLooksLike?: string;
+  completedFocusBlock?: boolean;
+  stayedOnTask?: boolean;
+  // chunk-and-externalize
+  listTitle?: string;
+  chunks?: ChunkItem[];
+  // break-it-down
+  bigTask?: string;
+  completedActions?: string[];
+  nextAction?: string;
+  taskComplete?: boolean;
+}
+
+export const practiceApi = {
+  create: (payload: Partial<PracticeEntry> & { exerciseId: string }) =>
+    request<PracticeEntry>("/api/practice", { method: "POST", body: JSON.stringify(payload) }),
+  list: (exerciseId: string) => request<PracticeEntry[]>(`/api/practice?exerciseId=${encodeURIComponent(exerciseId)}`),
+  update: (id: string, patch: Partial<PracticeEntry>) =>
+    request<PracticeEntry>(`/api/practice/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
+};

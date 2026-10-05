@@ -119,6 +119,7 @@ export function LearningPath() {
                     key={step.key}
                     exercise={exercise}
                     progress={{ done: step.status === "done", onToggle: () => toggle(step) }}
+                    interactive
                   />
                 );
               })}
