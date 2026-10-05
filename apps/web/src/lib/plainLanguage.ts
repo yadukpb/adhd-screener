@@ -86,33 +86,107 @@ export function headlineForCounts(elevated: number, mild: number): string {
   return "Several notable differences";
 }
 
-/** The lead paragraph(s) at the top of a report. */
-export function overallSummary(indicators: Indicator[], previous?: Indicator[] | null): string[] {
+// --- In-depth summary: same plain-language voice, but walks through the
+// actual findings with the technical term + measured value named inline
+// (not hidden) instead of a two-sentence headline. ---
+
+interface Category {
+  title: string;
+  keys: string[];
+  /** One line of context for what this category of measures is getting at. */
+  blurb: string;
+}
+
+const CATEGORIES: Category[] = [
+  {
+    title: "Self-reported symptoms",
+    keys: ["asrs", "wurs"],
+    blurb: "What you reported about your own day-to-day (and childhood) attention and activity patterns.",
+  },
+  {
+    title: "Attention & focus",
+    keys: ["cpt-omission", "cpt-rtsd", "cpt-tau", "cpt-dprime"],
+    blurb: "How consistently you caught targets and stayed locked onto the focus task, measured a few different ways.",
+  },
+  {
+    title: "Impulse control",
+    keys: ["cpt-commission", "stop-ssrt"],
+    blurb: "How well you held back a reaction you weren't supposed to make, and how fast you could cancel one already underway.",
+  },
+  {
+    title: "Working memory",
+    keys: ["nback-dprime"],
+    blurb: "How well you kept track of recent information while the task kept moving.",
+  },
+];
+
+function indicatorSentence(ind: Indicator): string {
+  const friendly = FRIENDLY_LABEL[ind.key] ?? ind.label;
+  const blurb = friendlyBlurb(ind);
+  if (ind.level === "typical") {
+    return `${friendly} (technical name: "${ind.label}") measured ${ind.valueText} -- in the typical range. ${blurb}`;
+  }
+  return `${friendly} (technical name: "${ind.label}") measured ${ind.valueText}${
+    ind.z !== null ? `, or ${ind.z.toFixed(1)} standard deviations from the reference norm (z = ${ind.z.toFixed(2)})` : ""
+  } -- ${FRIENDLY_LEVEL[ind.level].toLowerCase()}. ${blurb}`;
+}
+
+export interface DetailedSection {
+  title: string;
+  blurb: string;
+  sentences: string[];
+}
+
+export interface DetailedReport {
+  headline: string;
+  sections: DetailedSection[];
+  comparison: string[];
+  disclaimer: string;
+}
+
+/** The full in-depth version: every finding named, with its technical term and measured value, grouped by what it's actually testing. */
+export function buildDetailedReport(indicators: Indicator[], previous?: Indicator[] | null): DetailedReport {
+  const byKey = new Map(indicators.map((i) => [i.key, i]));
+
+  const sections: DetailedSection[] = CATEGORIES.map((cat) => ({
+    title: cat.title,
+    blurb: cat.blurb,
+    sentences: cat.keys.map((k) => byKey.get(k)).filter((i): i is Indicator => !!i).map(indicatorSentence),
+  })).filter((s) => s.sentences.length > 0);
+
   const elevated = indicators.filter((i) => i.level === "elevated").length;
   const mild = indicators.filter((i) => i.level === "mild").length;
+  const headline =
+    elevated === 0 && mild === 0
+      ? `All ${indicators.length} measures came back in the typical range.`
+      : `${elevated} of ${indicators.length} measures came back notably different from typical, and ${mild} were mildly so -- details by category below.`;
 
-  const lines: string[] = [];
-
-  if (elevated === 0 && mild === 0) {
-    lines.push("Everything here came back in the typical range today.");
-  } else if (elevated === 0) {
-    lines.push(`Mostly typical today, with ${mild === 1 ? "one area" : `${mild} areas`} worth keeping an eye on.`);
-  } else if (elevated <= 2) {
-    lines.push(`A couple of areas stood out as notably different from typical today.`);
-  } else {
-    lines.push(`Several areas stood out as notably different from typical today.`);
-  }
-
+  const comparison: string[] = [];
   if (previous && previous.length > 0) {
-    const prevElevated = previous.filter((i) => i.level === "elevated").length;
-    const prevMild = previous.filter((i) => i.level === "mild").length;
-    const prevScore = prevElevated * 2 + prevMild;
-    const curScore = elevated * 2 + mild;
-    if (curScore < prevScore) lines.push("That's an improvement compared to your last screening.");
-    else if (curScore > prevScore) lines.push("That's more than your last screening showed.");
-    else lines.push("That's about the same as your last screening.");
+    const prevByKey = new Map(previous.map((i) => [i.key, i]));
+    for (const ind of indicators) {
+      const prev = prevByKey.get(ind.key);
+      if (!prev || prev.level === ind.level) continue;
+      const friendly = FRIENDLY_LABEL[ind.key] ?? ind.label;
+      const direction = rank(ind.level) < rank(prev.level) ? "improved" : "moved in the other direction";
+      comparison.push(
+        `${friendly} (${ind.label}) ${direction}: ${FRIENDLY_LEVEL[prev.level].toLowerCase()} (${prev.valueText}) → ${FRIENDLY_LEVEL[ind.level].toLowerCase()} (${ind.valueText}).`,
+      );
+    }
+    if (comparison.length === 0) {
+      comparison.push("No category changed status compared to your last screening.");
+    }
   }
 
-  lines.push("This is a screening aid, not a diagnosis -- if you're concerned, it's worth talking to a doctor.");
-  return lines;
+  return {
+    headline,
+    sections,
+    comparison,
+    disclaimer:
+      "This is a screening aid, not a diagnosis. ADHD diagnosis requires a clinical interview against DSM-5/ICD-11 criteria, developmental history, and evidence of impairment across settings -- no questionnaire or reaction-time task, including this one, is diagnostic on its own. If several measures above are notably different from typical, it's worth discussing this report with a clinician.",
+  };
+}
+
+function rank(level: Level): number {
+  return level === "typical" ? 0 : level === "mild" ? 1 : 2;
 }

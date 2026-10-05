@@ -1,6 +1,6 @@
 import type { Indicator, Level } from "@adhd-screener/core";
 import { referenceById } from "@adhd-screener/core";
-import { FRIENDLY_LABEL, FRIENDLY_LEVEL, friendlyBlurb, overallSummary } from "../lib/plainLanguage";
+import { FRIENDLY_LABEL, FRIENDLY_LEVEL, friendlyBlurb, buildDetailedReport } from "../lib/plainLanguage";
 
 const LEVEL_STYLES: Record<Level, { border: string; badge: string; dot: string }> = {
   typical: { border: "border-l-emerald-400", badge: "bg-emerald-400/10 text-emerald-300", dot: "bg-emerald-400" },
@@ -58,16 +58,44 @@ function IndicatorCard({ ind }: { ind: Indicator }) {
 }
 
 export function ReportView({ indicators, previous }: { indicators: Indicator[]; previous?: Indicator[] | null }) {
-  const summaryLines = overallSummary(indicators, previous);
+  const report = buildDetailedReport(indicators, previous);
 
   return (
     <div className="animate-fade-in">
-      <div className="glass-card mb-6 space-y-2 p-6">
-        {summaryLines.map((line, i) => (
-          <p key={i} className={i === 0 ? "text-lg font-semibold text-slate-100" : "text-sm text-slate-400"}>
-            {line}
-          </p>
-        ))}
+      <div className="glass-card mb-6 p-6">
+        <p className="text-lg font-semibold text-slate-100">{report.headline}</p>
+
+        <div className="mt-5 space-y-5">
+          {report.sections.map((section) => (
+            <div key={section.title}>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-300">{section.title}</h3>
+              <p className="mt-1 text-xs text-slate-500">{section.blurb}</p>
+              <ul className="mt-2 space-y-2">
+                {section.sentences.map((s, i) => (
+                  <li key={i} className="flex gap-2 text-sm leading-relaxed text-slate-300">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/20" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {report.comparison.length > 0 && (
+          <div className="mt-5 border-t border-white/5 pt-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-300">Compared to your last screening</h3>
+            <ul className="mt-2 space-y-1.5">
+              {report.comparison.map((line, i) => (
+                <li key={i} className="text-sm leading-relaxed text-slate-300">
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <p className="mt-5 border-t border-white/5 pt-4 text-xs leading-relaxed text-slate-500">{report.disclaimer}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
