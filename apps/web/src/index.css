@@ -11,10 +11,19 @@ body,
 body {
   font-family: "Inter", system-ui, sans-serif;
   min-height: 100vh;
+  /* background-attachment: fixed pins this to the viewport, not the
+     document -- without it, the gradient is positioned relative to
+     body's own (page-length) box, so on any page taller than one
+     screen the glow fades out within the first viewport and every
+     card below that point renders against flat color instead, with a
+     visible seam right at the fade boundary. Fixed removes that: the
+     same glow is always in the same place on screen, at every scroll
+     depth, on every page. */
   background:
     radial-gradient(circle at 15% 0%, rgba(99, 102, 241, 0.08), transparent 45%),
     radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.06), transparent 40%),
     #f8fafc;
+  background-attachment: fixed;
 }
 
 html.dark body {
@@ -22,6 +31,7 @@ html.dark body {
     radial-gradient(circle at 15% 0%, rgba(99, 102, 241, 0.18), transparent 45%),
     radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.14), transparent 40%),
     #020617;
+  background-attachment: fixed;
 }
 
 /* Chart colors -- recharts takes raw CSS color strings (no Tailwind
