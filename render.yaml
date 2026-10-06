@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: adhd-screener-api
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm run start --workspace apps/api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
