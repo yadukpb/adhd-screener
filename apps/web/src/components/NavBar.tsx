@@ -25,7 +25,7 @@ export function NavBar() {
           <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-purple-500 text-sm text-white">
             A
           </span>
-          <span className="hidden sm:inline">ADHD Screener</span>
+          <span className="text-sm sm:text-base">ADHD Screener</span>
         </Link>
 
         <div className="hidden items-center gap-4 md:flex">
