@@ -27,6 +27,7 @@ export interface AuthUser {
   email: string;
   name: string;
   role: "user" | "admin";
+  medicationTracking: "unset" | "on" | "off";
 }
 
 export const authApi = {
@@ -36,6 +37,8 @@ export const authApi = {
     request<AuthUser>("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
   logout: () => request<void>("/api/auth/logout", { method: "POST" }),
   me: () => request<AuthUser>("/api/auth/me"),
+  setMedicationTracking: (medicationTracking: "on" | "off") =>
+    request<AuthUser>("/api/auth/preferences", { method: "PATCH", body: JSON.stringify({ medicationTracking }) }),
 };
 
 export interface SessionSummary {
@@ -219,7 +222,8 @@ export interface HabitLogEntry {
 }
 
 export const habitLogApi = {
-  range: (days = 30) => request<{ entries: HabitLogEntry[]; streak: number }>(`/api/habit-log/range?days=${days}`),
+  range: (days = 30) =>
+    request<{ entries: HabitLogEntry[]; streak: number; longestStreak: number; totalDays: number }>(`/api/habit-log/range?days=${days}`),
   save: (patch: { date?: string; medicationTaken?: boolean; mood?: number; sleepHours?: number; note?: string }) =>
     request<HabitLogEntry>("/api/habit-log", { method: "PUT", body: JSON.stringify(patch) }),
 };

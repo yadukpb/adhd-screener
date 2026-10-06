@@ -28,6 +28,26 @@ function computeStreak(dates: string[]): number {
   return streak;
 }
 
+/**
+ * Longest run of consecutive calendar days anywhere in their history, not
+ * just one ending today -- a broken streak shouldn't erase the record of a
+ * good one. Dates are "YYYY-MM-DD" strings, which sort lexicographically.
+ */
+function computeLongestStreak(dates: string[]): number {
+  const sorted = [...new Set(dates)].sort();
+  if (sorted.length === 0) return 0;
+  let longest = 1;
+  let run = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(sorted[i - 1]);
+    const cur = new Date(sorted[i]);
+    const dayGap = Math.round((cur.getTime() - prev.getTime()) / 86_400_000);
+    run = dayGap === 1 ? run + 1 : 1;
+    if (run > longest) longest = run;
+  }
+  return longest;
+}
+
 habitLogRouter.get(
   "/range",
   asyncHandler<AuthedRequest>(async (req, res) => {
@@ -36,11 +56,19 @@ habitLogRouter.get(
     since.setDate(since.getDate() - days);
     const sinceKey = `${since.getFullYear()}-${String(since.getMonth() + 1).padStart(2, "0")}-${String(since.getDate()).padStart(2, "0")}`;
 
-    const entries = await HabitLogModel.find({ user: req.userId, date: { $gte: sinceKey } })
-      .sort({ date: 1 })
-      .lean();
+    const [entries, allDates] = await Promise.all([
+      HabitLogModel.find({ user: req.userId, date: { $gte: sinceKey } })
+        .sort({ date: 1 })
+        .lean(),
+      // Separate, lightweight (date field only) all-time query -- longest
+      // streak and total-days-logged are "personal best" stats that
+      // shouldn't be clipped to whatever window the calendar view asked for.
+      HabitLogModel.find({ user: req.userId }, { date: 1, _id: 0 }).lean(),
+    ]);
+    const allDateStrings = allDates.map((d) => d.date);
     const streak = computeStreak(entries.map((e) => e.date));
-    res.json({ entries, streak });
+    const longestStreak = computeLongestStreak(allDateStrings);
+    res.json({ entries, streak, longestStreak, totalDays: allDateStrings.length });
   }),
 );
 

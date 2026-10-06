@@ -43,7 +43,7 @@ authRouter.post("/register", asyncHandler(async (req, res) => {
 
   const token = signToken(user._id.toString());
   res.cookie("token", token, COOKIE_OPTS);
-  res.status(201).json({ id: user._id, email: user.email, name: user.name, role: user.role });
+  res.status(201).json({ id: user._id, email: user.email, name: user.name, role: user.role, medicationTracking: user.medicationTracking });
 }));
 
 authRouter.post("/login", asyncHandler(async (req, res) => {
@@ -66,7 +66,7 @@ authRouter.post("/login", asyncHandler(async (req, res) => {
 
   const token = signToken(user._id.toString());
   res.cookie("token", token, COOKIE_OPTS);
-  res.json({ id: user._id, email: user.email, name: user.name, role: user.role });
+  res.json({ id: user._id, email: user.email, name: user.name, role: user.role, medicationTracking: user.medicationTracking });
 }));
 
 authRouter.post("/logout", (_req, res) => {
@@ -78,11 +78,34 @@ authRouter.get(
   "/me",
   requireAuth,
   asyncHandler<AuthedRequest>(async (req, res) => {
-    const user = await UserModel.findById(req.userId).select("email name role createdAt");
+    const user = await UserModel.findById(req.userId).select("email name role medicationTracking createdAt");
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
     }
-    res.json({ id: user._id, email: user.email, name: user.name, role: user.role });
+    res.json({ id: user._id, email: user.email, name: user.name, role: user.role, medicationTracking: user.medicationTracking });
+  }),
+);
+
+authRouter.patch(
+  "/preferences",
+  requireAuth,
+  asyncHandler<AuthedRequest>(async (req, res) => {
+    const { medicationTracking } = req.body as { medicationTracking?: string };
+    if (medicationTracking !== undefined && !["unset", "on", "off"].includes(medicationTracking)) {
+      res.status(400).json({ error: "medicationTracking must be 'unset', 'on', or 'off'" });
+      return;
+    }
+    const update: Record<string, unknown> = {};
+    if (medicationTracking !== undefined) update.medicationTracking = medicationTracking;
+
+    const user = await UserModel.findByIdAndUpdate(req.userId, { $set: update }, { new: true }).select(
+      "email name role medicationTracking",
+    );
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    res.json({ id: user._id, email: user.email, name: user.name, role: user.role, medicationTracking: user.medicationTracking });
   }),
 );
