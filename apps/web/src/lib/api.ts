@@ -157,3 +157,23 @@ export const practiceApi = {
   update: (id: string, patch: Partial<PracticeEntry>) =>
     request<PracticeEntry>(`/api/practice/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
 };
+
+export type TaskColor = "blue" | "green" | "purple" | "amber" | "rose";
+
+export interface DailyTask {
+  _id: string;
+  date: string;
+  title: string;
+  time?: string;
+  color: TaskColor;
+  done: boolean;
+}
+
+export const dailyTasksApi = {
+  list: (date: string) => request<DailyTask[]>(`/api/daily-tasks?date=${encodeURIComponent(date)}`),
+  create: (payload: { title: string; date: string; time?: string; color?: TaskColor }) =>
+    request<DailyTask>("/api/daily-tasks", { method: "POST", body: JSON.stringify(payload) }),
+  update: (id: string, patch: Partial<Pick<DailyTask, "title" | "time" | "color" | "done">>) =>
+    request<DailyTask>(`/api/daily-tasks/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
+  remove: (id: string) => request<void>(`/api/daily-tasks/${id}`, { method: "DELETE" }),
+};

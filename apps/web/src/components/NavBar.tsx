@@ -40,6 +40,9 @@ export function NavBar() {
                 <Link to="/dashboard" className={navLinkClass}>
                   Dashboard
                 </Link>
+                <Link to="/planner" className={navLinkClass}>
+                  Planner
+                </Link>
                 <Link to="/learning-path" className={navLinkClass}>
                   My Path
                 </Link>
@@ -105,6 +108,9 @@ export function NavBar() {
               <>
                 <Link to="/dashboard" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   Dashboard
+                </Link>
+                <Link to="/planner" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                  Planner
                 </Link>
                 <Link to="/learning-path" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   My Path
