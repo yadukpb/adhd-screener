@@ -66,6 +66,7 @@ export function ScreeningFlow() {
     return (
       <div className="px-4 py-12">
         <Questionnaire
+          key="asrs"
           title="Current Symptoms"
           subtitle="Think about the last 6 months. For each question, choose how often it applies to you."
           items={asrsItems}
@@ -83,6 +84,7 @@ export function ScreeningFlow() {
     return (
       <div className="px-4 py-12">
         <Questionnaire
+          key="wurs"
           title="Childhood Symptoms"
           subtitle="Think back to when you were a child (roughly ages 6-10). Rate how much each item described you then."
           items={wursItems}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface QuestionnaireItem {
   id: string;
@@ -19,6 +19,7 @@ export function Questionnaire({ title, subtitle, items, labels, onComplete }: Pr
 
   const item = items[index];
   const progressPct = Math.round((index / items.length) * 100);
+  const selected = responses[index];
 
   function choose(value: number) {
     const next = [...responses];
@@ -27,6 +28,16 @@ export function Questionnaire({ title, subtitle, items, labels, onComplete }: Pr
     if (index + 1 >= items.length) onComplete(next);
     else setIndex(index + 1);
   }
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      const n = Number(e.key);
+      if (Number.isInteger(n) && n >= 1 && n <= labels.length) choose(n - 1);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, responses, labels.length]);
 
   return (
     <div className="mx-auto max-w-xl animate-fade-in">
@@ -46,14 +57,18 @@ export function Questionnaire({ title, subtitle, items, labels, onComplete }: Pr
           {labels.map((label, value) => (
             <button
               key={label}
-              className="rounded-xl border border-subtle bg-inset px-4 py-3 text-left text-body
-                transition hover:border-brand-400/50 hover:bg-brand-500/10 active:scale-[0.99]"
+              className={`rounded-xl border px-4 py-3 text-left transition active:scale-[0.99] ${
+                selected === value
+                  ? "border-brand-400 bg-brand-500/15 text-heading"
+                  : "border-subtle bg-inset text-body hover:border-brand-400/50 hover:bg-brand-500/10"
+              }`}
               onClick={() => choose(value)}
             >
               {label}
             </button>
           ))}
         </div>
+        <p className="mt-3 text-xs text-faint">Tip: press 1-{labels.length} on your keyboard to answer.</p>
       </div>
 
       {index > 0 && (
