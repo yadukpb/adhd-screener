@@ -7,15 +7,15 @@ export function Landing() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-20 text-center animate-slide-up">
       <span className="rounded-full border border-subtle bg-inset px-3 py-1 text-xs font-medium text-brand-600 dark:text-brand-300">
-        Research-based screening aid &middot; Not a diagnosis
+        ADHD screening aid &middot; Not a diagnosis
       </span>
       <h1 className="mt-6 bg-gradient-to-br from-slate-900 to-slate-600 bg-clip-text text-4xl font-extrabold text-transparent dark:from-white dark:to-slate-400 sm:text-5xl">
-        Understand your attention, inhibition, and working memory
+        Could it be ADHD? Get a clearer picture.
       </h1>
       <p className="mx-auto mt-4 max-w-xl text-subtle">
-        Three short questionnaires and three computer tasks, scored against literature-informed norms with every claim
-        traced to a citation. Track how your indicators move over time, and ask an AI that already knows your results
-        to walk you through them in plain language.
+        A few short questionnaires and quick computer games -- not a clinical interview -- that check for common ADHD
+        patterns like attention, impulse control, and emotional ups and downs. Backed by real research, explained in
+        plain language, and you can chat with an AI afterward to understand what it found.
       </p>
       <div className="mt-8 flex justify-center gap-3">
         <Link to={user ? "/screen" : "/register"} className="btn-primary px-6 py-3">
