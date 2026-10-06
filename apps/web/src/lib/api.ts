@@ -52,6 +52,23 @@ export interface CreateSessionPayload {
   nbackTrials?: NbackTrial[];
 }
 
+export interface ScreeningDraft {
+  step: "asrs" | "wurs" | "cpt" | "stop" | "nback";
+  asrs?: number[];
+  wurs?: number[];
+  cptTrials?: CptTrial[];
+  stopTrials?: StopTrial[];
+  stopMaxRt?: number;
+  nbackTrials?: NbackTrial[];
+}
+
+export const screeningDraftApi = {
+  get: () => request<ScreeningDraft | null>("/api/screening-draft"),
+  save: (patch: ScreeningDraft) =>
+    request<ScreeningDraft>("/api/screening-draft", { method: "PUT", body: JSON.stringify(patch) }),
+  clear: () => request<void>("/api/screening-draft", { method: "DELETE" }),
+};
+
 export const sessionsApi = {
   create: (payload: CreateSessionPayload) =>
     request<SessionSummary>("/api/sessions", { method: "POST", body: JSON.stringify(payload) }),
