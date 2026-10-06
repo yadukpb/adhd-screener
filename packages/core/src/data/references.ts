@@ -208,6 +208,22 @@ export const references: Reference[] = [
     usedFor: "exercises/library.ts -- the 'Mindful Pause' exercise.",
   },
   {
+    id: "soderlund2010whitenoise",
+    cite: "Soderlund GBW, Sikstrom S, Loftesnes JM, Sonuga-Barke EJ (2010). The effects of background white noise on memory performance in inattentive school children. Behav Brain Funct 6:55.",
+    topic: "treatment",
+    finding:
+      "Background white noise (78 dB) improved episodic memory performance for inattentive children and WORSENED it for attentive children -- consistent with the Moderate Brain Arousal model (noise helps when a brain is understimulated, hurts when it's already well-stimulated). Not a universal benefit.",
+    usedFor: "Focus timer's optional background-noise feature -- framed as worth trying, not guaranteed, given the finding cuts both ways depending on the person.",
+  },
+  {
+    id: "pilcher2025breathing",
+    cite: "Pilcher JJ, et al. (2025). Brief slow-paced breathing improves working memory, mood, and stress in college students. Anxiety Stress Coping. DOI: 10.1080/10615806.2025.2505897.",
+    topic: "treatment",
+    finding:
+      "A single brief session of slow-paced breathing (vs. a mind-wandering control condition) improved working memory task performance and reduced self-reported stress, in a randomized controlled study of 139 undergraduates.",
+    usedFor: "Focus timer's breathing-break option between focus blocks.",
+  },
+  {
     id: "lieberman2007affectlabeling",
     cite: "Lieberman MD, Eisenberger NI, Crockett MJ, Tom SM, Pfeifer JH, Way BM (2007). Putting feelings into words: affect labeling disrupts amygdala activity in response to affective stimuli. Psychol Sci 18(5):421-428.",
     topic: "treatment",
