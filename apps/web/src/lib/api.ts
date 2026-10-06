@@ -1,4 +1,4 @@
-import type { CptTrial, StopTrial, NbackTrial, Indicator } from "@adhd-screener/core";
+import type { CptTrial, StopTrial, NbackTrial, FlankerTrial, Indicator } from "@adhd-screener/core";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
 
@@ -50,17 +50,19 @@ export interface CreateSessionPayload {
   cptTrials?: CptTrial[];
   stopTrials?: StopTrial[];
   stopMaxRt?: number;
+  flankerTrials?: FlankerTrial[];
   nbackTrials?: NbackTrial[];
 }
 
 export interface ScreeningDraft {
-  step: "asrs" | "wurs" | "emotionalDyscontrol" | "cpt" | "stop" | "nback";
+  step: "asrs" | "wurs" | "emotionalDyscontrol" | "cpt" | "stop" | "flanker" | "nback";
   asrs?: number[];
   wurs?: number[];
   emotionalDyscontrol?: number[];
   cptTrials?: CptTrial[];
   stopTrials?: StopTrial[];
   stopMaxRt?: number;
+  flankerTrials?: FlankerTrial[];
   nbackTrials?: NbackTrial[];
 }
 

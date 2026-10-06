@@ -15,6 +15,7 @@ const screeningDraftSchema = new Schema(
     stopTrials: { type: Schema.Types.Mixed, default: undefined },
     stopMaxRt: { type: Number, default: undefined },
     nbackTrials: { type: Schema.Types.Mixed, default: undefined },
+    flankerTrials: { type: Schema.Types.Mixed, default: undefined },
   },
   { timestamps: true },
 );

@@ -1,6 +1,6 @@
 import type { Indicator, RegionId, Session, Level } from "../types";
 import { zScore } from "./stats";
-import { cptNorms, stopNorms, nbackNorms, orientedZ, levelFromOrientedZ, type NormEntry } from "../data/norms";
+import { cptNorms, stopNorms, nbackNorms, flankerNorms, orientedZ, levelFromOrientedZ, type NormEntry } from "../data/norms";
 import { scoreAsrs, type AsrsResult } from "../questionnaires/asrs";
 import { scoreWurs, WURS_CUTOFF, type WursResult } from "../questionnaires/wurs";
 import { scoreEmotionalDyscontrol, type EmotionalDyscontrolResult } from "../questionnaires/emotionalDyscontrol";
@@ -165,6 +165,21 @@ export function computeIndicators(session: Session): Indicator[] {
         n.dPrime.toFixed(2),
         "Signal-detection sensitivity on the 2-back task. Working-memory deficits in ADHD are moderate and partially independent of the inhibitory and attentional measures above.",
         ["pfc"],
+      ),
+    );
+  }
+
+  if (session.flanker) {
+    const f = session.flanker;
+    indicators.push(
+      objectiveIndicator(
+        "flanker-interference",
+        "Flanker interference effect",
+        f.interferenceEffect,
+        flankerNorms.interferenceEffect,
+        `+${f.interferenceEffect.toFixed(0)} ms slower on conflicting trials`,
+        "How much slower you were responding to the center arrow when surrounding arrows pointed the other way, versus when they agreed. A bigger gap means more trouble filtering out irrelevant information competing for attention -- the normative threshold here comes from a children's-sample study, since adult meta-analyses on this specific task are sparser than for the other tasks in this app.",
+        ["acc", "pfc"],
       ),
     );
   }

@@ -47,6 +47,18 @@ const nbackSummarySchema = new Schema(
   { _id: false },
 );
 
+const flankerSummarySchema = new Schema(
+  {
+    congruentRt: flexibleFloat,
+    incongruentRt: flexibleFloat,
+    interferenceEffect: flexibleFloat,
+    congruentAccuracy: flexibleFloat,
+    incongruentAccuracy: flexibleFloat,
+    overallAccuracy: flexibleFloat,
+  },
+  { _id: false },
+);
+
 // Indicators are stored as the computed snapshot at report time (Mixed,
 // mirrored by the core `Indicator[]` type in application code) so a
 // person's history stays stable even if norms.ts is later refined.
@@ -61,6 +73,7 @@ const screeningSessionSchema = new Schema(
     cpt: { type: cptSummarySchema, default: undefined },
     stop: { type: stopSummarySchema, default: undefined },
     nback: { type: nbackSummarySchema, default: undefined },
+    flanker: { type: flankerSummarySchema, default: undefined },
     indicators: { type: [indicatorSchema], required: true },
   },
   { timestamps: true },

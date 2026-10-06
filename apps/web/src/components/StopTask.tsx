@@ -57,7 +57,7 @@ export function StopTask({ onComplete }: Props) {
   if (!started) {
     return (
       <Instructions
-        title="Task 2 of 3: Go / Stop"
+        title="Task 2 of 4: Go / Stop"
         bullets={[
           "Press LEFT or RIGHT arrow (or tap the matching button) to match the direction shown, as fast as you can.",
           "Sometimes the arrow turns red after it appears -- when that happens, try NOT to press/tap anything.",

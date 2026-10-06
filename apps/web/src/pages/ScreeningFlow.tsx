@@ -10,14 +10,16 @@ import {
   type CptTrial,
   type StopTrial,
   type NbackTrial,
+  type FlankerTrial,
 } from "@adhd-screener/core";
 import { Questionnaire } from "../components/Questionnaire";
 import { CptTask } from "../components/CptTask";
 import { StopTask } from "../components/StopTask";
+import { FlankerTask } from "../components/FlankerTask";
 import { NbackTask } from "../components/NbackTask";
 import { sessionsApi, screeningDraftApi, ApiError, type ScreeningDraft } from "../lib/api";
 
-type Step = "intro" | "asrs" | "wurs" | "emotionalDyscontrol" | "cpt" | "stop" | "nback" | "submitting";
+type Step = "intro" | "asrs" | "wurs" | "emotionalDyscontrol" | "cpt" | "stop" | "flanker" | "nback" | "submitting";
 
 function saveDraft(patch: ScreeningDraft) {
   // Best-effort: losing a draft write shouldn't block the person from
@@ -36,6 +38,7 @@ export function ScreeningFlow() {
   const emotionalDyscontrolRef = useRef<number[] | null>(null);
   const cptRef = useRef<CptTrial[] | null>(null);
   const stopRef = useRef<{ trials: StopTrial[]; maxRt: number } | null>(null);
+  const flankerRef = useRef<FlankerTrial[] | null>(null);
   const nbackRef = useRef<NbackTrial[] | null>(null);
 
   useEffect(() => {
@@ -51,6 +54,7 @@ export function ScreeningFlow() {
     emotionalDyscontrolRef.current = d.emotionalDyscontrol ?? null;
     cptRef.current = d.cptTrials ?? null;
     if (d.stopTrials && d.stopMaxRt !== undefined) stopRef.current = { trials: d.stopTrials, maxRt: d.stopMaxRt };
+    flankerRef.current = d.flankerTrials ?? null;
     setStep(d.step);
   }
 
@@ -62,6 +66,7 @@ export function ScreeningFlow() {
     emotionalDyscontrolRef.current = null;
     cptRef.current = null;
     stopRef.current = null;
+    flankerRef.current = null;
     nbackRef.current = null;
     setStep("asrs");
   }
@@ -77,6 +82,7 @@ export function ScreeningFlow() {
         cptTrials: cptRef.current ?? undefined,
         stopTrials: stopRef.current?.trials,
         stopMaxRt: stopRef.current?.maxRt,
+        flankerTrials: flankerRef.current ?? undefined,
         nbackTrials: nbackRef.current ?? undefined,
       });
       screeningDraftApi.clear().catch((err) => console.error("[screening-draft] failed to clear:", err));
@@ -93,17 +99,18 @@ export function ScreeningFlow() {
     }
 
     const hasDraft =
-      draft && (draft.asrs || draft.wurs || draft.emotionalDyscontrol || draft.cptTrials || draft.stopTrials || draft.nbackTrials);
+      draft &&
+      (draft.asrs || draft.wurs || draft.emotionalDyscontrol || draft.cptTrials || draft.stopTrials || draft.flankerTrials || draft.nbackTrials);
 
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center animate-slide-up">
         <h1 className="text-2xl font-bold text-heading">New Screening</h1>
         <p className="mt-3 text-subtle">
-          This takes about 12 minutes total: three short questionnaires (~2 min each), then three brief computer tasks
-          measuring attention, response inhibition, and working memory (~2 min each).
+          This takes about 14 minutes total: three short questionnaires (~2 min each), then four brief computer tasks
+          measuring attention, response inhibition, selective attention, and working memory (~2 min each).
         </p>
         <p className="mt-3 text-sm text-faint">
-          Make sure you have about 12 uninterrupted minutes before you begin. Each individual task needs your full
+          Make sure you have about 14 uninterrupted minutes before you begin. Each individual task needs your full
           attention start to finish, but your progress is saved after every section -- if you do need to stop, you can
           pick up again right where you left off.
         </p>
@@ -208,7 +215,21 @@ export function ScreeningFlow() {
         <StopTask
           onComplete={(trials, maxRt) => {
             stopRef.current = { trials, maxRt };
-            saveDraft({ step: "nback", stopTrials: trials, stopMaxRt: maxRt });
+            saveDraft({ step: "flanker", stopTrials: trials, stopMaxRt: maxRt });
+            setStep("flanker");
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (step === "flanker") {
+    return (
+      <div className="px-4 py-12">
+        <FlankerTask
+          onComplete={(trials) => {
+            flankerRef.current = trials;
+            saveDraft({ step: "nback", flankerTrials: trials });
             setStep("nback");
           }}
         />

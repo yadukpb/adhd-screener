@@ -16,8 +16,8 @@ import { UserModel } from "../src/models/User";
 import { ScreeningSessionModel } from "../src/models/ScreeningSession";
 import { LearningPathModel } from "../src/models/LearningPath";
 import { regenerateLearningPath } from "../src/services/learningPath";
-import { summarizeCpt, summarizeStop, summarizeNback, computeIndicators } from "@adhd-screener/core";
-import type { CptTrial, StopTrial, NbackTrial, Session } from "@adhd-screener/core";
+import { summarizeCpt, summarizeStop, summarizeNback, summarizeFlanker, computeIndicators } from "@adhd-screener/core";
+import type { CptTrial, StopTrial, NbackTrial, FlankerTrial, Session } from "@adhd-screener/core";
 import { mulberry32 } from "@adhd-screener/core";
 
 const email = process.argv[2];
@@ -71,6 +71,18 @@ function makeStopTrials(rng: Rng, opts: { goRtMean: number; goRtSd: number; stop
   return { trials, maxRt: maxRt || 1200 };
 }
 
+function makeFlankerTrials(rng: Rng, opts: { congruentRtMean: number; interferenceMs: number; errorRate: number }): FlankerTrial[] {
+  const trials: FlankerTrial[] = [];
+  for (let i = 0; i < 60; i++) {
+    const congruent = i % 2 === 0;
+    const correct = rng() >= opts.errorRate;
+    const base = congruent ? opts.congruentRtMean : opts.congruentRtMean + opts.interferenceMs;
+    const rt = correct ? Math.round(Math.max(150, gaussian(rng, base, 50))) : null;
+    trials.push({ congruent, correct, rt });
+  }
+  return trials;
+}
+
 function makeNbackTrials(rng: Rng, opts: { hitRate: number; falseAlarmRate: number }): NbackTrial[] {
   const trials: NbackTrial[] = [];
   for (let i = 0; i < 50; i++) {
@@ -89,6 +101,7 @@ interface Profile {
   emotionalDyscontrol: number[];
   cpt: { omissionRate: number; commissionRate: number; rtMean: number; rtSd: number };
   stop: { goRtMean: number; goRtSd: number; stopSkill: number };
+  flanker: { congruentRtMean: number; interferenceMs: number; errorRate: number };
   nback: { hitRate: number; falseAlarmRate: number };
 }
 
@@ -103,6 +116,7 @@ const profiles: Profile[] = [
     emotionalDyscontrol: [4, 3, 4, 3],
     cpt: { omissionRate: 0.22, commissionRate: 0.55, rtMean: 430, rtSd: 140 },
     stop: { goRtMean: 420, goRtSd: 60, stopSkill: 0.3 },
+    flanker: { congruentRtMean: 460, interferenceMs: 95, errorRate: 0.18 },
     nback: { hitRate: 0.45, falseAlarmRate: 0.3 },
   },
   {
@@ -113,6 +127,7 @@ const profiles: Profile[] = [
     emotionalDyscontrol: [2, 3, 2, 1],
     cpt: { omissionRate: 0.1, commissionRate: 0.3, rtMean: 410, rtSd: 100 },
     stop: { goRtMean: 400, goRtSd: 50, stopSkill: 0.45 },
+    flanker: { congruentRtMean: 420, interferenceMs: 55, errorRate: 0.1 },
     nback: { hitRate: 0.65, falseAlarmRate: 0.18 },
   },
   {
@@ -123,6 +138,7 @@ const profiles: Profile[] = [
     emotionalDyscontrol: [1, 1, 0, 1],
     cpt: { omissionRate: 0.03, commissionRate: 0.12, rtMean: 400, rtSd: 85 },
     stop: { goRtMean: 395, goRtSd: 45, stopSkill: 0.5 },
+    flanker: { congruentRtMean: 400, interferenceMs: 30, errorRate: 0.04 },
     nback: { hitRate: 0.82, falseAlarmRate: 0.08 },
   },
 ];
@@ -147,11 +163,13 @@ async function main() {
     const rng = mulberry32(1000 + i);
     const cptTrials = makeCptTrials(rng, profile.cpt);
     const { trials: stopTrials, maxRt } = makeStopTrials(rng, profile.stop);
+    const flankerTrials = makeFlankerTrials(rng, profile.flanker);
     const nbackTrials = makeNbackTrials(rng, profile.nback);
 
     const session: Session = { asrs: profile.asrs, wurs: profile.wurs, emotionalDyscontrol: profile.emotionalDyscontrol };
     session.cpt = summarizeCpt(cptTrials);
     session.stop = summarizeStop(stopTrials, maxRt);
+    session.flanker = summarizeFlanker(flankerTrials);
     session.nback = summarizeNback(nbackTrials);
     const indicators = computeIndicators(session);
 
@@ -161,8 +179,10 @@ async function main() {
         user: user._id,
         asrs: session.asrs,
         wurs: session.wurs,
+        emotionalDyscontrol: session.emotionalDyscontrol,
         cpt: session.cpt,
         stop: session.stop,
+        flanker: session.flanker,
         nback: session.nback,
         indicators,
         createdAt,

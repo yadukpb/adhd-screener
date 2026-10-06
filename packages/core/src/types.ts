@@ -16,6 +16,12 @@ export interface StopSummary {
 export interface NbackTrial { target: boolean; responded: boolean }
 export interface NbackSummary { hits: number; misses: number; falseAlarms: number; correctRejections: number; dPrime: number }
 
+export interface FlankerTrial { congruent: boolean; correct: boolean; rt: number | null }
+export interface FlankerSummary {
+  congruentRt: number; incongruentRt: number; interferenceEffect: number;
+  congruentAccuracy: number; incongruentAccuracy: number; overallAccuracy: number;
+}
+
 export interface Session {
   asrs: number[] | null;
   wurs: number[] | null;
@@ -23,6 +29,7 @@ export interface Session {
   cpt?: CptSummary;
   stop?: StopSummary;
   nback?: NbackSummary;
+  flanker?: FlankerSummary;
 }
 
 export type RegionId = "pfc" | "ifg" | "parietal" | "acc" | "dmn" | "striatum" | "accumbens" | "limbic" | "cerebellum";

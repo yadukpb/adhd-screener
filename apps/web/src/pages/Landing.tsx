@@ -72,7 +72,7 @@ export function Landing() {
         <p className="mx-auto mt-6 max-w-xl text-center text-xs leading-relaxed text-faint">
           Left unaddressed, childhood ADHD also predicts measurably worse educational attainment, job stability, and
           relationship outcomes by young adulthood ({referenceById("barkley2006outcomes")?.cite}). None of this means
-          catching it is a cure-all -- it means the cost of not looking is real, and worth weighing against the ~12
+          catching it is a cure-all -- it means the cost of not looking is real, and worth weighing against the ~14
           minutes this screening takes.
         </p>
         <p className="mx-auto mt-3 max-w-xl text-center text-[11px] leading-relaxed text-faint">
@@ -83,7 +83,7 @@ export function Landing() {
       <div className="mt-16 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
         {[
           { title: "3 questionnaires", body: "Current symptoms, childhood symptoms, and emotional regulation -- every scoring threshold traced to its source." },
-          { title: "3 objective tasks", body: "A go/no-go CPT, a stop-signal task, and a 2-back -- the same measures used in the ADHD research literature." },
+          { title: "4 objective tasks", body: "A go/no-go CPT, a stop-signal task, a flanker (filtering distractions) task, and a 2-back -- the same measures used in the ADHD research literature." },
           { title: "Your trend over time", body: "Every result is saved to your account so you can see each indicator move across repeated screenings." },
           { title: "Ask the AI about it", body: "Once you have results, chat with an assistant that already has the full context -- plain-language answers, no clinical jargon." },
         ].map((f) => (
@@ -124,14 +124,16 @@ export function Landing() {
               2
             </span>
             <div>
-              <h3 className="font-semibold text-heading">You run 3 short computer tasks (~6 minutes)</h3>
+              <h3 className="font-semibold text-heading">You run 4 short computer tasks (~8 minutes)</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-subtle">
                 Self-report only tells you what you believe about yourself. These tasks measure something harder to
                 fake: a <strong>go/no-go test</strong> (sustained attention -- do you catch targets and hold back on
                 the one letter you shouldn't react to?), a <strong>stop-signal task</strong> (how fast you can cancel
                 a response you've already started -- the most specific marker of inhibitory control in the ADHD
-                literature), and a <strong>2-back task</strong> (holding a small amount of information in mind while
-                it keeps changing). Each one is scored against literature-derived norms, not an arbitrary pass/fail.
+                literature), a <strong>flanker task</strong> (how much slower you get when irrelevant information
+                surrounds the thing you're actually supposed to respond to), and a <strong>2-back task</strong>{" "}
+                (holding a small amount of information in mind while it keeps changing). Each one is scored against
+                literature-derived norms, not an arbitrary pass/fail.
               </p>
             </div>
           </div>
@@ -143,9 +145,9 @@ export function Landing() {
             <div>
               <h3 className="font-semibold text-heading">You get a report with both a plain-language and a technical view</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-subtle">
-                Every single measure -- 10 of them across the three categories above -- gets its own card: what it
-                found in plain words, the actual technical value underneath if you want it, and the published source
-                behind it. Nothing is hidden, and nothing is asserted without a citation you can check yourself.
+                Every single measure -- 11 of them across 5 categories -- gets its own card: what it found in plain
+                words, the actual technical value underneath if you want it, and the published source behind it.
+                Nothing is hidden, and nothing is asserted without a citation you can check yourself.
               </p>
             </div>
           </div>

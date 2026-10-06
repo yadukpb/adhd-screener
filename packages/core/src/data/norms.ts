@@ -40,6 +40,10 @@ export const nbackNorms: Record<"dPrime", NormEntry> = {
   dPrime: { mu: 2.0, sigma: 0.7, worseDirection: "low", refs: ["kofler2013", "shaw2007"] },
 };
 
+export const flankerNorms: Record<"interferenceEffect", NormEntry> = {
+  interferenceEffect: { mu: 40, sigma: 25, worseDirection: "high", refs: ["mullane2009flanker", "bush2005"] },
+};
+
 /** Orients a raw z so that positive always means "more ADHD-associated", regardless of worseDirection. */
 export function orientedZ(z: number, worseDirection: "high" | "low"): number {
   return worseDirection === "high" ? z : -z;

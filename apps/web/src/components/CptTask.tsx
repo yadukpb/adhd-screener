@@ -26,7 +26,7 @@ export function CptTask({ onComplete }: Props) {
   if (!started) {
     return (
       <Instructions
-        title="Task 1 of 3: Letter Monitoring"
+        title="Task 1 of 4: Letter Monitoring"
         bullets={[
           `Press SPACE (or tap the button) for every letter EXCEPT "${CPT_NOGO_LETTER}".`,
           `When you see "${CPT_NOGO_LETTER}", do nothing.`,

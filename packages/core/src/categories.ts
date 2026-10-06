@@ -21,7 +21,7 @@ export type ReportCategory = (typeof REPORT_CATEGORIES)[number];
 export const CATEGORY_KEYS: Record<ReportCategory, string[]> = {
   "Self-reported symptoms": ["asrs", "wurs"],
   "Attention & focus": ["cpt-omission", "cpt-rtsd", "cpt-tau", "cpt-dprime"],
-  "Impulse control": ["cpt-commission", "stop-ssrt"],
+  "Impulse control": ["cpt-commission", "stop-ssrt", "flanker-interference"],
   "Working memory": ["nback-dprime"],
   "Emotional Regulation": ["emotional-dyscontrol"],
 };

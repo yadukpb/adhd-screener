@@ -1,5 +1,5 @@
 import { Router } from "express";
-import type { CptTrial, StopTrial, NbackTrial } from "@adhd-screener/core";
+import type { CptTrial, StopTrial, NbackTrial, FlankerTrial } from "@adhd-screener/core";
 import { ScreeningDraftModel } from "../models/ScreeningDraft";
 import { requireAuth, type AuthedRequest } from "../middleware/auth";
 import { asyncHandler } from "../asyncHandler";
@@ -7,7 +7,7 @@ import { asyncHandler } from "../asyncHandler";
 export const screeningDraftRouter = Router();
 screeningDraftRouter.use(requireAuth);
 
-const VALID_STEPS = ["asrs", "wurs", "emotionalDyscontrol", "cpt", "stop", "nback"] as const;
+const VALID_STEPS = ["asrs", "wurs", "emotionalDyscontrol", "cpt", "stop", "flanker", "nback"] as const;
 type DraftStep = (typeof VALID_STEPS)[number];
 
 interface SaveDraftBody {
@@ -18,6 +18,7 @@ interface SaveDraftBody {
   cptTrials?: CptTrial[];
   stopTrials?: StopTrial[];
   stopMaxRt?: number;
+  flankerTrials?: FlankerTrial[];
   nbackTrials?: NbackTrial[];
 }
 
@@ -45,6 +46,7 @@ screeningDraftRouter.put(
     if (body.cptTrials) update.cptTrials = body.cptTrials;
     if (body.stopTrials) update.stopTrials = body.stopTrials;
     if (body.stopMaxRt !== undefined) update.stopMaxRt = body.stopMaxRt;
+    if (body.flankerTrials) update.flankerTrials = body.flankerTrials;
     if (body.nbackTrials) update.nbackTrials = body.nbackTrials;
 
     const draft = await ScreeningDraftModel.findOneAndUpdate(

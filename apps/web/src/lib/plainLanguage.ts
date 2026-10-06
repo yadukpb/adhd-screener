@@ -17,6 +17,7 @@ export const FRIENDLY_LABEL: Record<string, string> = {
   "stop-ssrt": "Cancelling a response quickly",
   "nback-dprime": "Holding information in mind",
   "emotional-dyscontrol": "Emotional regulation",
+  "flanker-interference": "Filtering out distractions",
 };
 
 export const FRIENDLY_LEVEL: Record<Level, string> = {
@@ -76,6 +77,11 @@ const BLURBS: Record<string, Record<Level, string>> = {
     mild: "You reported some trouble with mood swings, irritability, or reacting more strongly than a situation called for.",
     elevated: "You reported a clear pattern of mood swings, irritability, and reacting more strongly than a situation called for.",
   },
+  "flanker-interference": {
+    typical: "Distracting information around the thing you were focused on barely slowed you down.",
+    mild: "Distracting information around the thing you were focused on slowed you down a bit more than typical.",
+    elevated: "Distracting information around the thing you were focused on slowed you down a lot -- a sign it's hard to filter out what's irrelevant.",
+  },
 };
 
 export function friendlyBlurb(ind: Indicator): string {
@@ -103,7 +109,7 @@ export function headlineForCounts(elevated: number, mild: number): string {
 const CATEGORY_BLURB: Record<ReportCategory, string> = {
   "Self-reported symptoms": "What you reported about your own day-to-day (and childhood) attention and activity patterns.",
   "Attention & focus": "How consistently you caught targets and stayed locked onto the focus task, measured a few different ways.",
-  "Impulse control": "How well you held back a reaction you weren't supposed to make, and how fast you could cancel one already underway.",
+  "Impulse control": "How well you held back a reaction you weren't supposed to make, how fast you could cancel one already underway, and how much distracting information threw you off.",
   "Working memory": "How well you kept track of recent information while the task kept moving.",
   "Emotional Regulation": "What you reported about mood swings, irritability, and reacting more strongly than a situation called for.",
 };

@@ -3,10 +3,12 @@ import {
   summarizeCpt,
   summarizeStop,
   summarizeNback,
+  summarizeFlanker,
   computeIndicators,
   type CptTrial,
   type StopTrial,
   type NbackTrial,
+  type FlankerTrial,
   type Session,
 } from "@adhd-screener/core";
 import { ScreeningSessionModel } from "../models/ScreeningSession";
@@ -25,6 +27,7 @@ interface CreateSessionBody {
   stopTrials?: StopTrial[];
   stopMaxRt?: number;
   nbackTrials?: NbackTrial[];
+  flankerTrials?: FlankerTrial[];
 }
 
 sessionsRouter.post("/", asyncHandler<AuthedRequest>(async (req, res) => {
@@ -35,6 +38,7 @@ sessionsRouter.post("/", asyncHandler<AuthedRequest>(async (req, res) => {
     if (body.cptTrials?.length) session.cpt = summarizeCpt(body.cptTrials);
     if (body.stopTrials?.length) session.stop = summarizeStop(body.stopTrials, body.stopMaxRt ?? 1200);
     if (body.nbackTrials?.length) session.nback = summarizeNback(body.nbackTrials);
+    if (body.flankerTrials?.length) session.flanker = summarizeFlanker(body.flankerTrials);
   } catch (err) {
     res.status(400).json({ error: err instanceof Error ? err.message : "Invalid trial data" });
     return;
@@ -54,6 +58,7 @@ sessionsRouter.post("/", asyncHandler<AuthedRequest>(async (req, res) => {
     cpt: session.cpt,
     stop: session.stop,
     nback: session.nback,
+    flanker: session.flanker,
     indicators,
   });
 

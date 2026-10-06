@@ -91,6 +91,14 @@ export const references: Reference[] = [
     usedFor: "ssrtIntegration() implementation and the StopSummary.valid gate in scoring.",
   },
   {
+    id: "mullane2009flanker",
+    cite: "Mullane JC, Corkum PV, Klein RM, McLaughlin EN (2009). Interference control in children with and without ADHD: a systematic review of Flanker and Simon task performance. Child Neuropsychology 15(4):321-342.",
+    topic: "tasks",
+    finding:
+      "Across 12 studies (272 children with ADHD, 280 typically developing controls), the ADHD group showed specific disadvantages in reaction time, error rate, and efficiency on incongruent relative to congruent trials -- weaker interference control. Conducted in children, not adults.",
+    usedFor: "Flanker task interference-effect normative threshold in scoring/indicators.ts.",
+  },
+  {
     id: "kofler2013",
     cite: "Kofler MJ, Rapport MD, Bolden J, et al. (2013). Working memory deficits and social problems in children with ADHD. J Abnorm Child Psychol 41(1):115-126.",
     topic: "tasks",

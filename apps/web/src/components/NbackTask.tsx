@@ -35,7 +35,7 @@ export function NbackTask({ onComplete }: Props) {
   if (!started) {
     return (
       <Instructions
-        title="Task 3 of 3: 2-Back Memory"
+        title="Task 4 of 4: 2-Back Memory"
         bullets={[
           `Press SPACE (or tap the button) whenever the current letter is the SAME as the letter shown ${NBACK_N} positions earlier.`,
           "Do nothing for every other letter.",
