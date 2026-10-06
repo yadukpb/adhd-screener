@@ -13,6 +13,7 @@ import { LearningPath } from "./pages/LearningPath";
 import { Planner } from "./pages/Planner";
 import { Focus } from "./pages/Focus";
 import { Habits } from "./pages/Habits";
+import { Coach } from "./pages/Coach";
 
 export function App() {
   return (
@@ -81,6 +82,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <Habits />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/coach"
+            element={
+              <ProtectedRoute>
+                <Coach />
               </ProtectedRoute>
             }
           />

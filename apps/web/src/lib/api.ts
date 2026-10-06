@@ -148,6 +148,8 @@ export interface ChatMessage {
 export const chatApi = {
   send: (sessionId: string, message: string, history: ChatMessage[]) =>
     request<{ reply: string }>(`/api/chat/${sessionId}`, { method: "POST", body: JSON.stringify({ message, history }) }),
+  sendCoach: (message: string, history: ChatMessage[]) =>
+    request<{ reply: string }>("/api/chat/coach", { method: "POST", body: JSON.stringify({ message, history }) }),
 };
 
 export const practiceApi = {

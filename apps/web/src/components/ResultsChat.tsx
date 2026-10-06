@@ -32,22 +32,30 @@ function suggestionsFor(indicators: Indicator[] | undefined): string[] {
   return suggestions;
 }
 
+const COACH_GREETING =
+  "Hi! I'm your daily coach -- I can see your latest screening, today's planner, today's check-in, and your learning path. Ask me anything, from \"what should I focus on\" to how your week's been going.";
+const COACH_SUGGESTIONS = ["What should I focus on today?", "Help me get started on something I'm avoiding", "How am I doing lately?"];
+
 export function ResultsChat({
+  mode = "results",
   sessionId,
   indicators,
   title = "Ask about your results",
+  subtitle = "Chat about what these results mean, in plain language -- no jargon. Not a substitute for professional advice.",
 }: {
-  sessionId: string;
+  mode?: "results" | "coach";
+  sessionId?: string;
   indicators?: Indicator[];
   title?: string;
+  subtitle?: string;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const greeting = useMemo(() => greetingFor(indicators), [indicators]);
-  const suggestions = useMemo(() => suggestionsFor(indicators), [indicators]);
+  const greeting = useMemo(() => (mode === "coach" ? COACH_GREETING : greetingFor(indicators)), [mode, indicators]);
+  const suggestions = useMemo(() => (mode === "coach" ? COACH_SUGGESTIONS : suggestionsFor(indicators)), [mode, indicators]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -62,7 +70,7 @@ export function ResultsChat({
     setMessages(next);
     setSending(true);
     try {
-      const { reply } = await chatApi.send(sessionId, trimmed, messages);
+      const { reply } = mode === "coach" ? await chatApi.sendCoach(trimmed, messages) : await chatApi.send(sessionId!, trimmed, messages);
       setMessages([...next, { role: "assistant", content: reply }]);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Couldn't send that. Try again.");
@@ -74,9 +82,7 @@ export function ResultsChat({
   return (
     <div className="glass-card flex flex-col p-5 sm:p-6">
       <h2 className="text-lg font-bold text-heading">{title}</h2>
-      <p className="mt-1 text-sm text-subtle">
-        Chat about what these results mean, in plain language -- no jargon. Not a substitute for professional advice.
-      </p>
+      <p className="mt-1 text-sm text-subtle">{subtitle}</p>
 
       <div ref={scrollRef} className="mt-4 flex max-h-96 min-h-[8rem] flex-col gap-3 overflow-y-auto pr-1">
         {messages.length === 0 && (

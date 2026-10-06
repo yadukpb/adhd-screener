@@ -65,6 +65,9 @@ export function NavBar() {
                       <Link to="/habits" className="block px-4 py-2.5 text-sm text-body hover-inset">
                         Daily Check-in
                       </Link>
+                      <Link to="/coach" className="block px-4 py-2.5 text-sm text-body hover-inset">
+                        Daily Coach
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -143,6 +146,9 @@ export function NavBar() {
                 </Link>
                 <Link to="/habits" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   Daily Check-in
+                </Link>
+                <Link to="/coach" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                  Daily Coach
                 </Link>
                 <Link to="/learning-path" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   My Path
