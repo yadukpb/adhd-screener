@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { FloatingCoachChat } from "./components/FloatingCoachChat";
 import { Landing } from "./pages/Landing";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
@@ -95,6 +96,7 @@ export function App() {
           />
         </Routes>
       </main>
+      <FloatingCoachChat />
     </div>
   );
 }

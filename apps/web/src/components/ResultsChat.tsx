@@ -36,18 +36,22 @@ const COACH_GREETING =
   "Hi! I'm your daily coach -- I can see your latest screening, today's planner, today's check-in, and your learning path. Ask me anything, from \"what should I focus on\" to how your week's been going.";
 const COACH_SUGGESTIONS = ["What should I focus on today?", "Help me get started on something I'm avoiding", "How am I doing lately?"];
 
-export function ResultsChat({
+/**
+ * The actual stateful chat UI (messages + input), with no card/header chrome
+ * around it -- shared by the full-page ResultsChat card below and the
+ * floating widget, so both talk to the exact same /api/chat endpoints with
+ * the exact same context-aware system prompt instead of drifting apart.
+ */
+export function ChatThread({
   mode = "results",
   sessionId,
   indicators,
-  title = "Ask about your results",
-  subtitle = "Chat about what these results mean, in plain language -- no jargon. Not a substitute for professional advice.",
+  maxHeightClassName = "max-h-96",
 }: {
   mode?: "results" | "coach";
   sessionId?: string;
   indicators?: Indicator[];
-  title?: string;
-  subtitle?: string;
+  maxHeightClassName?: string;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -80,11 +84,8 @@ export function ResultsChat({
   }
 
   return (
-    <div className="glass-card flex flex-col p-5 sm:p-6">
-      <h2 className="text-lg font-bold text-heading">{title}</h2>
-      <p className="mt-1 text-sm text-subtle">{subtitle}</p>
-
-      <div ref={scrollRef} className="mt-4 flex max-h-96 min-h-[8rem] flex-col gap-3 overflow-y-auto pr-1">
+    <>
+      <div ref={scrollRef} className={`flex min-h-[8rem] flex-col gap-3 overflow-y-auto pr-1 ${maxHeightClassName}`}>
         {messages.length === 0 && (
           <div className="flex flex-col gap-3">
             <div className="flex justify-start">
@@ -146,6 +147,30 @@ export function ResultsChat({
           Send
         </button>
       </form>
+    </>
+  );
+}
+
+export function ResultsChat({
+  mode = "results",
+  sessionId,
+  indicators,
+  title = "Ask about your results",
+  subtitle = "Chat about what these results mean, in plain language -- no jargon. Not a substitute for professional advice.",
+}: {
+  mode?: "results" | "coach";
+  sessionId?: string;
+  indicators?: Indicator[];
+  title?: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="glass-card flex flex-col p-5 sm:p-6">
+      <h2 className="text-lg font-bold text-heading">{title}</h2>
+      <p className="mt-1 text-sm text-subtle">{subtitle}</p>
+      <div className="mt-4 flex flex-col">
+        <ChatThread mode={mode} sessionId={sessionId} indicators={indicators} />
+      </div>
     </div>
   );
 }
