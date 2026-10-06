@@ -121,6 +121,16 @@ export interface PracticeEntry {
   reframe?: string;
 }
 
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export const chatApi = {
+  send: (sessionId: string, message: string, history: ChatMessage[]) =>
+    request<{ reply: string }>(`/api/chat/${sessionId}`, { method: "POST", body: JSON.stringify({ message, history }) }),
+};
+
 export const practiceApi = {
   create: (payload: Partial<PracticeEntry> & { exerciseId: string }) =>
     request<PracticeEntry>("/api/practice", { method: "POST", body: JSON.stringify(payload) }),

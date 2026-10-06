@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { sessionsApi, ApiError, type SessionSummary } from "../lib/api";
 import { ReportView } from "../components/ReportView";
+import { ResultsChat } from "../components/ResultsChat";
 
 export function ReportPage() {
   const { id } = useParams<{ id: string }>();
@@ -49,6 +50,10 @@ export function ReportPage() {
         </Link>
       </div>
       <ReportView indicators={session.indicators} previous={previous?.indicators} />
+
+      <div className="mt-8">
+        <ResultsChat sessionId={session._id} />
+      </div>
     </div>
   );
 }

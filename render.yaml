@@ -15,3 +15,5 @@ services:
         sync: false
       - key: WEB_ORIGIN
         sync: false
+      - key: GROQ_API_KEY
+        sync: false
