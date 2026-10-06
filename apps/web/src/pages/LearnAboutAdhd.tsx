@@ -1,6 +1,18 @@
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { referenceById, referencesByTopic, type Reference } from "@adhd-screener/core";
+import {
+  IconClipboard,
+  IconHeart,
+  IconUsers,
+  IconDna,
+  IconCpu,
+  IconStethoscope,
+  IconPuzzle,
+  IconPill,
+  IconTrend,
+  IconLightbulb,
+} from "../components/icons";
 
 function SourceList({ ids }: { ids: string[] }) {
   return (
@@ -12,26 +24,31 @@ function SourceList({ ids }: { ids: string[] }) {
   );
 }
 
-function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+function Section({ id, title, icon: Icon, children }: { id: string; title: string; icon: ComponentType<{ size?: number }>; children: ReactNode }) {
   return (
     <section id={id} className="glass-card scroll-mt-20 p-6 sm:p-8">
-      <h2 className="text-xl font-bold text-heading">{title}</h2>
-      <div className="mt-3 space-y-4 text-[15px] leading-relaxed text-body">{children}</div>
+      <div className="flex items-center gap-3">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-purple-500 text-white">
+          <Icon size={18} />
+        </span>
+        <h2 className="text-xl font-bold text-heading">{title}</h2>
+      </div>
+      <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-body">{children}</div>
     </section>
   );
 }
 
 const TOC = [
-  { id: "what-is-it", label: "What ADHD actually is" },
-  { id: "emotional-regulation", label: "Emotional regulation" },
-  { id: "how-common", label: "How common it is" },
-  { id: "causes", label: "What causes it" },
-  { id: "brain-science", label: "The brain science" },
-  { id: "diagnosis", label: "How it's actually diagnosed" },
-  { id: "co-occurring", label: "Conditions that often come with it" },
-  { id: "management", label: "How it's typically managed" },
-  { id: "outlook", label: "Long-term outlook" },
-  { id: "myths", label: "Common myths, corrected" },
+  { id: "what-is-it", label: "What ADHD actually is", icon: IconClipboard },
+  { id: "emotional-regulation", label: "Emotional regulation", icon: IconHeart },
+  { id: "how-common", label: "How common it is", icon: IconUsers },
+  { id: "causes", label: "What causes it", icon: IconDna },
+  { id: "brain-science", label: "The brain science", icon: IconCpu },
+  { id: "diagnosis", label: "How it's actually diagnosed", icon: IconStethoscope },
+  { id: "co-occurring", label: "Conditions that often come with it", icon: IconPuzzle },
+  { id: "management", label: "How it's typically managed", icon: IconPill },
+  { id: "outlook", label: "Long-term outlook", icon: IconTrend },
+  { id: "myths", label: "Common myths, corrected", icon: IconLightbulb },
 ];
 
 export function LearnAboutAdhd() {
@@ -44,7 +61,10 @@ export function LearnAboutAdhd() {
           Reference &middot; not personalized
         </span>
         <h1 className="mt-4 text-3xl font-extrabold text-heading sm:text-4xl">What is ADHD?</h1>
-        <p className="mt-3 max-w-xl text-subtle">
+        <p className="mt-3 max-w-xl text-lg font-medium text-heading">
+          Not a character flaw. Not a parenting failure. Not something you just grow out of.
+        </p>
+        <p className="mt-2 max-w-xl text-subtle">
           An in-depth look at the condition this screener is built around -- what it is, what the research actually shows
           about its causes and the brain, how it's really diagnosed, and what gets treated once it is. Every claim here
           is traced to a source at the bottom of its section, the same standard the rest of this app holds itself to.
@@ -53,10 +73,11 @@ export function LearnAboutAdhd() {
 
       <nav className="glass-card mb-8 p-5">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-faint">On this page</p>
-        <ul className="grid gap-1 sm:grid-cols-2">
+        <ul className="grid gap-1.5 sm:grid-cols-2">
           {TOC.map((t) => (
             <li key={t.id}>
-              <a href={`#${t.id}`} className="text-sm text-brand-600 hover:underline dark:text-brand-300">
+              <a href={`#${t.id}`} className="flex items-center gap-2 text-sm text-brand-600 hover:underline dark:text-brand-300">
+                <t.icon size={14} />
                 {t.label}
               </a>
             </li>
@@ -65,7 +86,7 @@ export function LearnAboutAdhd() {
       </nav>
 
       <div className="space-y-6">
-        <Section id="what-is-it" title="What ADHD actually is">
+        <Section id="what-is-it" title="What ADHD actually is" icon={IconClipboard}>
           <p>
             Attention-Deficit/Hyperactivity Disorder (ADHD) is a <strong>neurodevelopmental condition</strong> -- meaning it
             arises from differences in how the brain develops, not from a character flaw, a lack of effort, or bad habits.
@@ -92,7 +113,7 @@ export function LearnAboutAdhd() {
           <SourceList ids={["dsm5tr", "faraone2021consensus"]} />
         </Section>
 
-        <Section id="emotional-regulation" title="Emotional regulation">
+        <Section id="emotional-regulation" title="Emotional regulation" icon={IconHeart}>
           <p>
             Trouble staying attentive and sitting still get the most attention, but a lot of adults with ADHD say the
             harder part day-to-day is emotional: mood shifting faster than feels controllable, irritability that seems
@@ -113,7 +134,7 @@ export function LearnAboutAdhd() {
           <SourceList ids={["faraone2021consensus", "silverstein2019ec"]} />
         </Section>
 
-        <Section id="how-common" title="How common it is">
+        <Section id="how-common" title="How common it is" icon={IconUsers}>
           <p>
             Pooled across worldwide studies, ADHD affects roughly <strong>5.3% of children and adolescents</strong>. It
             doesn't simply disappear at adulthood: pooled estimates put adult prevalence around <strong>2.5%</strong>,
@@ -123,7 +144,7 @@ export function LearnAboutAdhd() {
           <SourceList ids={["polanczyk2007", "simon2009"]} />
         </Section>
 
-        <Section id="causes" title="What causes it">
+        <Section id="causes" title="What causes it" icon={IconDna}>
           <p>
             ADHD is substantially genetic. Twin studies consistently put its <strong>heritability around 70-80%</strong>,
             placing it among the most heritable conditions in psychiatry -- comparable to height. No single gene is
@@ -140,7 +161,7 @@ export function LearnAboutAdhd() {
           <SourceList ids={["faraone2019genetics"]} />
         </Section>
 
-        <Section id="brain-science" title="The brain science">
+        <Section id="brain-science" title="The brain science" icon={IconCpu}>
           <p>
             This is also, concretely, why this screener's three tasks measure what they measure -- each one is a proxy
             for a specific brain system that the research below has repeatedly implicated in ADHD.
@@ -177,7 +198,7 @@ export function LearnAboutAdhd() {
           <SourceList ids={brainRefs.map((r) => r.id)} />
         </Section>
 
-        <Section id="diagnosis" title="How it's actually diagnosed">
+        <Section id="diagnosis" title="How it's actually diagnosed" icon={IconStethoscope}>
           <p>
             No blood test, brain scan, questionnaire, or reaction-time task -- including every one in this app -- is
             diagnostic on its own. A real diagnosis comes from a clinical interview that checks for several symptoms
@@ -192,7 +213,7 @@ export function LearnAboutAdhd() {
           <SourceList ids={["dsm5tr", "faraone2021consensus"]} />
         </Section>
 
-        <Section id="co-occurring" title="Conditions that often come with it">
+        <Section id="co-occurring" title="Conditions that often come with it" icon={IconPuzzle}>
           <p>
             ADHD rarely shows up alone. Anxiety, depression, and learning disorders are commonly reported alongside it,
             and a proper evaluation typically screens for these too -- partly because they can look similar to ADHD from
@@ -202,7 +223,7 @@ export function LearnAboutAdhd() {
           <SourceList ids={["faraone2021consensus"]} />
         </Section>
 
-        <Section id="management" title="How it's typically managed">
+        <Section id="management" title="How it's typically managed" icon={IconPill}>
           <p>
             This is general information, not medical advice -- any treatment decision belongs with a licensed clinician
             who knows the specific person. That said, the approaches most commonly used, often in combination, are:
@@ -214,7 +235,7 @@ export function LearnAboutAdhd() {
           </ul>
         </Section>
 
-        <Section id="outlook" title="Long-term outlook">
+        <Section id="outlook" title="Long-term outlook" icon={IconTrend}>
           <p>
             Left unaddressed, childhood ADHD predicts measurably worse educational attainment, job stability, and
             relationship outcomes by young adulthood compared to peers without it. That's the main reason this app
@@ -224,30 +245,47 @@ export function LearnAboutAdhd() {
           <SourceList ids={["barkley2006outcomes"]} />
         </Section>
 
-        <Section id="myths" title="Common myths, corrected">
-          <ul className="list-disc space-y-3 pl-5">
-            <li>
-              <strong>"It's just kids being kids, or laziness."</strong> It's a recognized neurodevelopmental condition
-              with consistent, replicated brain-based correlates -- see the brain science section above.
-            </li>
-            <li>
-              <strong>"It's caused by bad parenting, sugar, or screen time."</strong> It's substantially genetic
-              (70-80% heritability); none of these are supported as primary causes.
-            </li>
-            <li>
-              <strong>"Only hyperactive boys have it."</strong> The inattentive presentation produces no disruptive
-              behavior and is easy to miss -- historically it has been under-recognized, especially in girls and women.
-            </li>
-            <li>
-              <strong>"It goes away by adulthood."</strong> For a large share of people, impairing symptoms persist into
-              adulthood, sometimes presenting differently than they did in childhood.
-            </li>
-            <li>
-              <strong>"A quiz like this one can diagnose it."</strong> It can't, and this app says so on every page --
-              see <Link to="/dashboard" className="text-brand-600 hover:underline dark:text-brand-300">your report</Link> for what it can
-              actually tell you.
-            </li>
-          </ul>
+        <Section id="myths" title="Common myths, corrected" icon={IconLightbulb}>
+          <div className="space-y-3">
+            {[
+              {
+                myth: "It's just kids being kids, or laziness.",
+                reality: "It's a recognized neurodevelopmental condition with consistent, replicated brain-based correlates -- see the brain science section above.",
+              },
+              {
+                myth: "It's caused by bad parenting, sugar, or screen time.",
+                reality: "It's substantially genetic (70-80% heritability); none of these are supported as primary causes.",
+              },
+              {
+                myth: "Only hyperactive boys have it.",
+                reality: "The inattentive presentation produces no disruptive behavior and is easy to miss -- historically under-recognized, especially in girls and women.",
+              },
+              {
+                myth: "It goes away by adulthood.",
+                reality: "For a large share of people, impairing symptoms persist into adulthood, sometimes presenting differently than they did in childhood.",
+              },
+              {
+                myth: "A quiz like this one can diagnose it.",
+                reality: (
+                  <>
+                    It can't, and this app says so on every page -- see{" "}
+                    <Link to="/dashboard" className="text-brand-600 hover:underline dark:text-brand-300">
+                      your report
+                    </Link>{" "}
+                    for what it can actually tell you.
+                  </>
+                ),
+              },
+            ].map((m) => (
+              <div key={m.myth} className="rounded-xl bg-inset p-4">
+                <p className="text-sm text-faint line-through decoration-rose-400/70">"{m.myth}"</p>
+                <p className="mt-1.5 text-sm text-body">
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">Actually: </span>
+                  {m.reality}
+                </p>
+              </div>
+            ))}
+          </div>
         </Section>
       </div>
     </div>

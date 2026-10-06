@@ -1,69 +1,7 @@
 import { Link } from "react-router-dom";
 import { referenceById } from "@adhd-screener/core";
 import { useAuth } from "../hooks/useAuth";
-
-function IconClipboard() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="6" y="4" width="12" height="17" rx="2" />
-      <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" />
-      <path d="M9 11h6M9 15h6M9 19h3" />
-    </svg>
-  );
-}
-function IconCpu() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="6" y="6" width="12" height="12" rx="2" />
-      <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3" />
-    </svg>
-  );
-}
-function IconTrend() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 17l6-6 4 4 7-8" />
-      <path d="M15 7h5v5" />
-    </svg>
-  );
-}
-function IconChat() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.4 8.6 8.6 0 0 1-4-1L3 20l1.1-5.5a8.38 8.38 0 0 1-1-4A8.4 8.4 0 0 1 11.5 3a8.38 8.38 0 0 1 8.4 8.4" />
-    </svg>
-  );
-}
-function IconUsers() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
-function IconSplit() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-    </svg>
-  );
-}
-function IconHeart() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8Z" />
-    </svg>
-  );
-}
-function IconSparkle() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" />
-    </svg>
-  );
-}
+import { IconClipboard, IconCpu, IconTrend, IconChat, IconUsers, IconSplit, IconHeart, IconSparkle, IconArrowRight, IconLightbulb } from "../components/icons";
 
 const FEATURES = [
   {
@@ -93,6 +31,21 @@ const STATS = [
   { icon: IconSplit, value: "61% vs 40%", body: "of women vs. men with ADHD are diagnosed in adulthood rather than childhood -- the quieter, inattentive presentation is easy to miss, especially in girls." },
   { icon: IconHeart, value: "57% / 73%", body: "of long-term studies found untreated ADHD linked to worse self-esteem and worse social functioning -- confidence issues aren't a side note, they're a documented pattern." },
   { icon: IconSparkle, value: "89% / 77%", body: "of those same studies found that treatment improved self-esteem and social-functioning outcomes -- the gap above is addressable once it's identified." },
+];
+
+const MYTH_GLIMPSE = [
+  {
+    myth: "It's just laziness or bad parenting.",
+    reality: "It's substantially genetic -- heritability around 70-80%, among the most heritable conditions in psychiatry.",
+  },
+  {
+    myth: "Only hyperactive boys have it.",
+    reality: "The inattentive presentation is quiet and easy to miss -- historically under-recognized in girls and women.",
+  },
+  {
+    myth: "You just grow out of it by adulthood.",
+    reality: "For a large share of people, impairing symptoms persist into adulthood, just presenting differently.",
+  },
 ];
 
 const STEPS = [
@@ -260,7 +213,7 @@ export function Landing() {
             <div key={s.value} className="glass-card p-5">
               <div className="flex items-center gap-2">
                 <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-500/15 text-brand-600 dark:text-brand-300">
-                  <s.icon />
+                  <s.icon size={18} />
                 </span>
                 <p className="bg-gradient-to-br from-brand-500 to-purple-500 bg-clip-text text-2xl font-extrabold text-transparent">
                   {s.value}
@@ -280,6 +233,42 @@ export function Landing() {
         <p className="mx-auto mt-3 max-w-xl text-center text-[11px] leading-relaxed text-faint">
           Sources: {referenceById("staley2024mmwr")?.cite} &middot; {referenceById("harpin2013selfesteem")?.cite}
         </p>
+      </section>
+
+      {/* ---------- What is ADHD glimpse ---------- */}
+      <section className="mx-auto max-w-4xl px-4 py-8">
+        <div className="glass-card overflow-hidden p-6 sm:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="text-center lg:text-left">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-500/15 px-3 py-1 text-xs font-medium text-brand-600 dark:text-brand-300">
+                <IconLightbulb size={14} />
+                Myth check
+              </span>
+              <h2 className="mt-4 text-2xl font-bold text-heading sm:text-3xl">Most of what you've heard about ADHD is wrong.</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-subtle lg:mx-0">
+                Three of the most common misconceptions -- and what the research actually says, with a source for
+                every claim.
+              </p>
+              <Link
+                to="/about-adhd"
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline dark:text-brand-300"
+              >
+                Get the full picture <IconArrowRight size={16} />
+              </Link>
+            </div>
+            <div className="space-y-3 lg:w-96">
+              {MYTH_GLIMPSE.map((m) => (
+                <div key={m.myth} className="rounded-xl bg-inset p-4 text-left">
+                  <p className="text-sm text-faint line-through decoration-rose-400/70">{m.myth}</p>
+                  <p className="mt-1.5 text-sm text-body">
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">Actually: </span>
+                    {m.reality}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ---------- Feature grid ---------- */}
