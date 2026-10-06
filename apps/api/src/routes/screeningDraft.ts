@@ -7,13 +7,14 @@ import { asyncHandler } from "../asyncHandler";
 export const screeningDraftRouter = Router();
 screeningDraftRouter.use(requireAuth);
 
-const VALID_STEPS = ["asrs", "wurs", "cpt", "stop", "nback"] as const;
+const VALID_STEPS = ["asrs", "wurs", "emotionalDyscontrol", "cpt", "stop", "nback"] as const;
 type DraftStep = (typeof VALID_STEPS)[number];
 
 interface SaveDraftBody {
   step: DraftStep;
   asrs?: number[];
   wurs?: number[];
+  emotionalDyscontrol?: number[];
   cptTrials?: CptTrial[];
   stopTrials?: StopTrial[];
   stopMaxRt?: number;
@@ -40,6 +41,7 @@ screeningDraftRouter.put(
     const update: Record<string, unknown> = { step: body.step };
     if (body.asrs) update.asrs = body.asrs;
     if (body.wurs) update.wurs = body.wurs;
+    if (body.emotionalDyscontrol) update.emotionalDyscontrol = body.emotionalDyscontrol;
     if (body.cptTrials) update.cptTrials = body.cptTrials;
     if (body.stopTrials) update.stopTrials = body.stopTrials;
     if (body.stopMaxRt !== undefined) update.stopMaxRt = body.stopMaxRt;

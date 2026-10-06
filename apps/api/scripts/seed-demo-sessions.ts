@@ -86,6 +86,7 @@ interface Profile {
   daysAgo: number;
   asrs: number[];
   wurs: number[];
+  emotionalDyscontrol: number[];
   cpt: { omissionRate: number; commissionRate: number; rtMean: number; rtSd: number };
   stop: { goRtMean: number; goRtSd: number; stopSkill: number };
   nback: { hitRate: number; falseAlarmRate: number };
@@ -99,6 +100,7 @@ const profiles: Profile[] = [
     daysAgo: 21,
     asrs: [3, 3, 3, 3, 3, 2],
     wurs: new Array(25).fill(3),
+    emotionalDyscontrol: [4, 3, 4, 3],
     cpt: { omissionRate: 0.22, commissionRate: 0.55, rtMean: 430, rtSd: 140 },
     stop: { goRtMean: 420, goRtSd: 60, stopSkill: 0.3 },
     nback: { hitRate: 0.45, falseAlarmRate: 0.3 },
@@ -108,6 +110,7 @@ const profiles: Profile[] = [
     daysAgo: 10,
     asrs: [2, 2, 3, 2, 2, 1],
     wurs: new Array(25).fill(2),
+    emotionalDyscontrol: [2, 3, 2, 1],
     cpt: { omissionRate: 0.1, commissionRate: 0.3, rtMean: 410, rtSd: 100 },
     stop: { goRtMean: 400, goRtSd: 50, stopSkill: 0.45 },
     nback: { hitRate: 0.65, falseAlarmRate: 0.18 },
@@ -117,6 +120,7 @@ const profiles: Profile[] = [
     daysAgo: 0,
     asrs: [1, 1, 2, 1, 0, 0],
     wurs: new Array(25).fill(1),
+    emotionalDyscontrol: [1, 1, 0, 1],
     cpt: { omissionRate: 0.03, commissionRate: 0.12, rtMean: 400, rtSd: 85 },
     stop: { goRtMean: 395, goRtSd: 45, stopSkill: 0.5 },
     nback: { hitRate: 0.82, falseAlarmRate: 0.08 },
@@ -145,7 +149,7 @@ async function main() {
     const { trials: stopTrials, maxRt } = makeStopTrials(rng, profile.stop);
     const nbackTrials = makeNbackTrials(rng, profile.nback);
 
-    const session: Session = { asrs: profile.asrs, wurs: profile.wurs };
+    const session: Session = { asrs: profile.asrs, wurs: profile.wurs, emotionalDyscontrol: profile.emotionalDyscontrol };
     session.cpt = summarizeCpt(cptTrials);
     session.stop = summarizeStop(stopTrials, maxRt);
     session.nback = summarizeNback(nbackTrials);

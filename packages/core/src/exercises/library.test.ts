@@ -9,6 +9,7 @@ describe("exercises library", () => {
       "Attention & focus",
       "Impulse control",
       "Working memory",
+      "Emotional Regulation",
     ];
     for (const cat of categories) {
       expect(exercisesForCategory(cat).length).toBeGreaterThan(0);

@@ -20,6 +20,7 @@ sessionsRouter.use(requireAuth);
 interface CreateSessionBody {
   asrs?: number[];
   wurs?: number[];
+  emotionalDyscontrol?: number[];
   cptTrials?: CptTrial[];
   stopTrials?: StopTrial[];
   stopMaxRt?: number;
@@ -29,7 +30,7 @@ interface CreateSessionBody {
 sessionsRouter.post("/", asyncHandler<AuthedRequest>(async (req, res) => {
   const body = req.body as CreateSessionBody;
 
-  const session: Session = { asrs: body.asrs ?? null, wurs: body.wurs ?? null };
+  const session: Session = { asrs: body.asrs ?? null, wurs: body.wurs ?? null, emotionalDyscontrol: body.emotionalDyscontrol };
   try {
     if (body.cptTrials?.length) session.cpt = summarizeCpt(body.cptTrials);
     if (body.stopTrials?.length) session.stop = summarizeStop(body.stopTrials, body.stopMaxRt ?? 1200);
@@ -49,6 +50,7 @@ sessionsRouter.post("/", asyncHandler<AuthedRequest>(async (req, res) => {
     user: req.userId,
     asrs: session.asrs ?? undefined,
     wurs: session.wurs ?? undefined,
+    emotionalDyscontrol: session.emotionalDyscontrol,
     cpt: session.cpt,
     stop: session.stop,
     nback: session.nback,

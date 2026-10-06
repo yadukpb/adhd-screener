@@ -10,6 +10,7 @@ const screeningDraftSchema = new Schema(
     step: { type: String, required: true },
     asrs: { type: [Number], default: undefined },
     wurs: { type: [Number], default: undefined },
+    emotionalDyscontrol: { type: [Number], default: undefined },
     cptTrials: { type: Schema.Types.Mixed, default: undefined },
     stopTrials: { type: Schema.Types.Mixed, default: undefined },
     stopMaxRt: { type: Number, default: undefined },

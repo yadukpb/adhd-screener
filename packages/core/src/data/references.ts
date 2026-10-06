@@ -112,6 +112,15 @@ export const references: Reference[] = [
     usedFor: "questionnaires/wurs.ts item bank, 25-item short form, and the 46-point cutoff.",
   },
   {
+    id: "silverstein2019ec",
+    cite: "Silverstein MJ, Faraone SV, Alperin S, Leon TL, Biederman J, Spencer TJ, Adler LA (2019). Validation of the expanded versions of the Adult ADHD Self-Report Scale v1.1 Symptom Checklist and the Adult ADHD Investigator Symptom Rating Scale. J Atten Disord 23(10):1101-1110.",
+    topic: "questionnaires",
+    finding:
+      "Validated a 4-item 'Emotional Dyscontrol' extension to the ASRS-v1.1, covering mood lability, irritability, and emotional overreactivity, on the same 0-4 Never-to-Very Often response scale as the base ASRS.",
+    usedFor:
+      "questionnaires/emotionalDyscontrol.ts -- the construct and response scale this project's own (original-wording) 4-item subscale is modeled on. Not a reproduction of this paper's item text, which isn't openly published.",
+  },
+  {
     id: "faraone2021consensus",
     cite: "Faraone SV, Banaschewski T, Coghill D, et al. (2021). The World Federation of ADHD International Consensus Statement: 208 evidence-based conclusions about ADHD. Neurosci Biobehav Rev 128:789-818.",
     topic: "consensus",
@@ -173,6 +182,14 @@ export const references: Reference[] = [
     topic: "treatment",
     finding: "An 8-week mindfulness training program for ADHD adults/adolescents was feasible and associated with improvements in attention and self-reported ADHD symptoms in this uncontrolled feasibility study -- early evidence, not yet a large confirmatory RCT.",
     usedFor: "exercises/library.ts -- the 'Mindful Pause' exercise.",
+  },
+  {
+    id: "lieberman2007affectlabeling",
+    cite: "Lieberman MD, Eisenberger NI, Crockett MJ, Tom SM, Pfeifer JH, Way BM (2007). Putting feelings into words: affect labeling disrupts amygdala activity in response to affective stimuli. Psychol Sci 18(5):421-428.",
+    topic: "treatment",
+    finding:
+      "Simply naming an emotion in words (\"affect labeling\"), rather than suppressing or analyzing it, measurably reduced amygdala reactivity in an fMRI study -- a brief, concrete technique for de-escalating a strong emotional reaction in the moment.",
+    usedFor: "exercises/library.ts -- the 'Name the Feeling' emotional-regulation exercise.",
   },
   {
     id: "miller1956",

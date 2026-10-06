@@ -13,6 +13,7 @@ export * from "./data/references";
 
 export * from "./questionnaires/asrs";
 export * from "./questionnaires/wurs";
+export * from "./questionnaires/emotionalDyscontrol";
 
 export * from "./tasks/rng";
 export * from "./tasks/cpt";

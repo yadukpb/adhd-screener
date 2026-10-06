@@ -19,6 +19,7 @@ export interface NbackSummary { hits: number; misses: number; falseAlarms: numbe
 export interface Session {
   asrs: number[] | null;
   wurs: number[] | null;
+  emotionalDyscontrol?: number[];
   cpt?: CptSummary;
   stop?: StopSummary;
   nback?: NbackSummary;

@@ -5,6 +5,8 @@ import {
   asrsResponseLabels,
   wursItems,
   wursResponseLabels,
+  emotionalDyscontrolItems,
+  emotionalDyscontrolResponseLabels,
   type CptTrial,
   type StopTrial,
   type NbackTrial,
@@ -15,7 +17,7 @@ import { StopTask } from "../components/StopTask";
 import { NbackTask } from "../components/NbackTask";
 import { sessionsApi, screeningDraftApi, ApiError, type ScreeningDraft } from "../lib/api";
 
-type Step = "intro" | "asrs" | "wurs" | "cpt" | "stop" | "nback" | "submitting";
+type Step = "intro" | "asrs" | "wurs" | "emotionalDyscontrol" | "cpt" | "stop" | "nback" | "submitting";
 
 function saveDraft(patch: ScreeningDraft) {
   // Best-effort: losing a draft write shouldn't block the person from
@@ -31,6 +33,7 @@ export function ScreeningFlow() {
 
   const asrsRef = useRef<number[] | null>(null);
   const wursRef = useRef<number[] | null>(null);
+  const emotionalDyscontrolRef = useRef<number[] | null>(null);
   const cptRef = useRef<CptTrial[] | null>(null);
   const stopRef = useRef<{ trials: StopTrial[]; maxRt: number } | null>(null);
   const nbackRef = useRef<NbackTrial[] | null>(null);
@@ -45,6 +48,7 @@ export function ScreeningFlow() {
   function resumeDraft(d: ScreeningDraft) {
     asrsRef.current = d.asrs ?? null;
     wursRef.current = d.wurs ?? null;
+    emotionalDyscontrolRef.current = d.emotionalDyscontrol ?? null;
     cptRef.current = d.cptTrials ?? null;
     if (d.stopTrials && d.stopMaxRt !== undefined) stopRef.current = { trials: d.stopTrials, maxRt: d.stopMaxRt };
     setStep(d.step);
@@ -55,6 +59,7 @@ export function ScreeningFlow() {
     setDraft(null);
     asrsRef.current = null;
     wursRef.current = null;
+    emotionalDyscontrolRef.current = null;
     cptRef.current = null;
     stopRef.current = null;
     nbackRef.current = null;
@@ -68,6 +73,7 @@ export function ScreeningFlow() {
       const created = await sessionsApi.create({
         asrs: asrsRef.current ?? undefined,
         wurs: wursRef.current ?? undefined,
+        emotionalDyscontrol: emotionalDyscontrolRef.current ?? undefined,
         cptTrials: cptRef.current ?? undefined,
         stopTrials: stopRef.current?.trials,
         stopMaxRt: stopRef.current?.maxRt,
@@ -86,17 +92,18 @@ export function ScreeningFlow() {
       return <div className="py-24 text-center text-subtle">Checking for an unfinished screening...</div>;
     }
 
-    const hasDraft = draft && (draft.asrs || draft.wurs || draft.cptTrials || draft.stopTrials || draft.nbackTrials);
+    const hasDraft =
+      draft && (draft.asrs || draft.wurs || draft.emotionalDyscontrol || draft.cptTrials || draft.stopTrials || draft.nbackTrials);
 
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center animate-slide-up">
         <h1 className="text-2xl font-bold text-heading">New Screening</h1>
         <p className="mt-3 text-subtle">
-          This takes about 10 minutes total: two short questionnaires (~2 min each), then three brief computer tasks
+          This takes about 12 minutes total: three short questionnaires (~2 min each), then three brief computer tasks
           measuring attention, response inhibition, and working memory (~2 min each).
         </p>
         <p className="mt-3 text-sm text-faint">
-          Make sure you have about 10 uninterrupted minutes before you begin. Each individual task needs your full
+          Make sure you have about 12 uninterrupted minutes before you begin. Each individual task needs your full
           attention start to finish, but your progress is saved after every section -- if you do need to stop, you can
           pick up again right where you left off.
         </p>
@@ -154,7 +161,26 @@ export function ScreeningFlow() {
           labels={wursResponseLabels}
           onComplete={(responses) => {
             wursRef.current = responses;
-            saveDraft({ step: "cpt", wurs: responses });
+            saveDraft({ step: "emotionalDyscontrol", wurs: responses });
+            setStep("emotionalDyscontrol");
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (step === "emotionalDyscontrol") {
+    return (
+      <div className="px-4 py-12">
+        <Questionnaire
+          key="emotionalDyscontrol"
+          title="Mood & Reactions"
+          subtitle="Think about the last 6 months. For each question, choose how often it applies to you."
+          items={emotionalDyscontrolItems}
+          labels={emotionalDyscontrolResponseLabels}
+          onComplete={(responses) => {
+            emotionalDyscontrolRef.current = responses;
+            saveDraft({ step: "cpt", emotionalDyscontrol: responses });
             setStep("cpt");
           }}
         />

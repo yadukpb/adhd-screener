@@ -3,6 +3,7 @@ import { zScore } from "./stats";
 import { cptNorms, stopNorms, nbackNorms, orientedZ, levelFromOrientedZ, type NormEntry } from "../data/norms";
 import { scoreAsrs, type AsrsResult } from "../questionnaires/asrs";
 import { scoreWurs, WURS_CUTOFF, type WursResult } from "../questionnaires/wurs";
+import { scoreEmotionalDyscontrol, type EmotionalDyscontrolResult } from "../questionnaires/emotionalDyscontrol";
 
 function objectiveIndicator(
   key: string,
@@ -50,11 +51,29 @@ function wursIndicator(result: WursResult): Indicator {
   };
 }
 
+function emotionalDyscontrolIndicator(result: EmotionalDyscontrolResult): Indicator {
+  const level: Level = result.screenPositive ? "elevated" : result.metCount >= 1 ? "mild" : "typical";
+  return {
+    key: "emotional-dyscontrol",
+    label: "Emotional Dyscontrol (current symptoms)",
+    z: null,
+    level,
+    valueText: `${result.metCount}/4 threshold items met (raw sum ${result.total}/16)`,
+    meaning:
+      "Self-reported frequency of mood lability, irritability, and emotional overreactivity -- a pattern increasingly recognized as a core adult ADHD feature, not just a side effect. Unlike the ASRS/WURS above, this subscale uses original items modeling a validated construct rather than a reproduction of a validated instrument, and its 'elevated/mild' bands are this project's own exploratory threshold, not a published clinical cutoff.",
+    regions: [],
+    refs: ["silverstein2019ec"],
+  };
+}
+
 export function computeIndicators(session: Session): Indicator[] {
   const indicators: Indicator[] = [];
 
   if (session.asrs) indicators.push(asrsIndicator(scoreAsrs(session.asrs)));
   if (session.wurs) indicators.push(wursIndicator(scoreWurs(session.wurs)));
+  if (session.emotionalDyscontrol) {
+    indicators.push(emotionalDyscontrolIndicator(scoreEmotionalDyscontrol(session.emotionalDyscontrol)));
+  }
 
   if (session.cpt) {
     const c = session.cpt;

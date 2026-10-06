@@ -46,6 +46,7 @@ export interface SessionSummary {
 export interface CreateSessionPayload {
   asrs?: number[];
   wurs?: number[];
+  emotionalDyscontrol?: number[];
   cptTrials?: CptTrial[];
   stopTrials?: StopTrial[];
   stopMaxRt?: number;
@@ -53,9 +54,10 @@ export interface CreateSessionPayload {
 }
 
 export interface ScreeningDraft {
-  step: "asrs" | "wurs" | "cpt" | "stop" | "nback";
+  step: "asrs" | "wurs" | "emotionalDyscontrol" | "cpt" | "stop" | "nback";
   asrs?: number[];
   wurs?: number[];
+  emotionalDyscontrol?: number[];
   cptTrials?: CptTrial[];
   stopTrials?: StopTrial[];
   stopMaxRt?: number;

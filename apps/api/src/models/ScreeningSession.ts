@@ -57,6 +57,7 @@ const screeningSessionSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
     asrs: { type: [Number], default: undefined },
     wurs: { type: [Number], default: undefined },
+    emotionalDyscontrol: { type: [Number], default: undefined },
     cpt: { type: cptSummarySchema, default: undefined },
     stop: { type: stopSummarySchema, default: undefined },
     nback: { type: nbackSummarySchema, default: undefined },

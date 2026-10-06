@@ -16,6 +16,7 @@ const CATEGORY_ANCHOR: Record<ReportCategory, string> = {
   "Attention & focus": "brain-science",
   "Impulse control": "brain-science",
   "Working memory": "brain-science",
+  "Emotional Regulation": "emotional-regulation",
 };
 
 export type LearningPathStepType = "learn" | "practice";

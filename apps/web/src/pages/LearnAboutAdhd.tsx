@@ -23,6 +23,7 @@ function Section({ id, title, children }: { id: string; title: string; children:
 
 const TOC = [
   { id: "what-is-it", label: "What ADHD actually is" },
+  { id: "emotional-regulation", label: "Emotional regulation" },
   { id: "how-common", label: "How common it is" },
   { id: "causes", label: "What causes it" },
   { id: "brain-science", label: "The brain science" },
@@ -89,6 +90,27 @@ export function LearnAboutAdhd() {
             </li>
           </ul>
           <SourceList ids={["dsm5tr", "faraone2021consensus"]} />
+        </Section>
+
+        <Section id="emotional-regulation" title="Emotional regulation">
+          <p>
+            Trouble staying attentive and sitting still get the most attention, but a lot of adults with ADHD say the
+            harder part day-to-day is emotional: mood shifting faster than feels controllable, irritability that seems
+            out of proportion to what triggered it, or taking longer than they'd like to calm back down after something
+            upsets them.
+          </p>
+          <p>
+            This isn't an official DSM-5 symptom domain the way inattention and hyperactivity-impulsivity are -- a
+            diagnosis doesn't require it. But it's widely documented in the research literature as a common, often
+            impairing feature of adult ADHD, and more recent self-report instruments have started measuring it directly
+            as an extension of existing ADHD screeners, rather than treating it as a separate, unrelated problem.
+          </p>
+          <p>
+            That's the basis for this app's "Emotional Regulation" result: an original set of questions, on the same
+            response scale as the other questionnaires here, asking about mood lability, irritability, and reacting more
+            strongly than a situation seems to call for.
+          </p>
+          <SourceList ids={["faraone2021consensus", "silverstein2019ec"]} />
         </Section>
 
         <Section id="how-common" title="How common it is">

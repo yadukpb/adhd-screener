@@ -132,6 +132,22 @@ export const exercises: Exercise[] = [
     ],
     refs: ["safren2005cbt"],
   },
+  {
+    id: "name-the-feeling",
+    category: "Emotional Regulation",
+    title: "Name the Feeling",
+    technique: "Affect labeling",
+    summary:
+      "When a strong reaction hits, naming the specific emotion in a word or two -- not analyzing it, not suppressing it, just naming it -- measurably reduces the brain's amygdala reactivity in the moment. It's one of the fastest, lowest-effort ways to take some heat out of a reaction while it's happening.",
+    steps: [
+      "The next time you notice a strong reaction building -- irritation, a mood shift, feeling overwhelmed -- pause for a moment before doing anything else.",
+      "Silently (or out loud) name the specific emotion in one or two words: \"frustrated,\" \"embarrassed,\" \"overwhelmed\" -- not \"I'm fine\" or a vague \"bad.\"",
+      "Be specific rather than general -- \"annoyed\" and \"hurt\" call for different responses even though both might show up as snapping at someone.",
+      "That's the whole exercise -- just naming it, not fixing it or explaining it away.",
+      "Notice afterward: did naming it, even briefly, take any of the edge off before you reacted?",
+    ],
+    refs: ["lieberman2007affectlabeling"],
+  },
 ];
 
 export function exercisesForCategory(category: Exercise["category"]): Exercise[] {

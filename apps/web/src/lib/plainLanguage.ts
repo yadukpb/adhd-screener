@@ -16,6 +16,7 @@ export const FRIENDLY_LABEL: Record<string, string> = {
   "cpt-dprime": "Overall accuracy on the focus task",
   "stop-ssrt": "Cancelling a response quickly",
   "nback-dprime": "Holding information in mind",
+  "emotional-dyscontrol": "Emotional regulation",
 };
 
 export const FRIENDLY_LEVEL: Record<Level, string> = {
@@ -70,6 +71,11 @@ const BLURBS: Record<string, Record<Level, string>> = {
     mild: "You had some trouble holding information in mind during the memory task.",
     elevated: "You had real trouble holding information in mind during the memory task.",
   },
+  "emotional-dyscontrol": {
+    typical: "You didn't report much trouble with mood swings, irritability, or overreacting.",
+    mild: "You reported some trouble with mood swings, irritability, or reacting more strongly than a situation called for.",
+    elevated: "You reported a clear pattern of mood swings, irritability, and reacting more strongly than a situation called for.",
+  },
 };
 
 export function friendlyBlurb(ind: Indicator): string {
@@ -99,6 +105,7 @@ const CATEGORY_BLURB: Record<ReportCategory, string> = {
   "Attention & focus": "How consistently you caught targets and stayed locked onto the focus task, measured a few different ways.",
   "Impulse control": "How well you held back a reaction you weren't supposed to make, and how fast you could cancel one already underway.",
   "Working memory": "How well you kept track of recent information while the task kept moving.",
+  "Emotional Regulation": "What you reported about mood swings, irritability, and reacting more strongly than a situation called for.",
 };
 
 function indicatorSentence(ind: Indicator): string {
