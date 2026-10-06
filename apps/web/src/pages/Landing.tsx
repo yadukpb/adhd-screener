@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { referenceById } from "@adhd-screener/core";
 import { useAuth } from "../hooks/useAuth";
 
 export function Landing() {
@@ -26,6 +27,57 @@ export function Landing() {
             Sign in
           </Link>
         )}
+      </div>
+
+      <div className="mt-20 text-left">
+        <h2 className="text-center text-2xl font-bold text-heading">Why catching it early actually matters</h2>
+        <p className="mx-auto mt-2 max-w-xl text-center text-sm text-subtle">
+          ADHD rarely announces itself. For a lot of people it just looks like years of feeling like everyone else
+          has a manual you never got -- here's what the research says about what that costs, and what changes once
+          it's identified.
+        </p>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div className="glass-card p-5">
+            <p className="bg-gradient-to-br from-brand-500 to-purple-500 bg-clip-text text-3xl font-extrabold text-transparent">~50%</p>
+            <p className="mt-2 text-sm text-subtle">
+              of U.S. adults with a current ADHD diagnosis were only diagnosed at <strong>age 18 or older</strong> --
+              meaning roughly half went through all of childhood and adolescence without it being caught.
+            </p>
+          </div>
+          <div className="glass-card p-5">
+            <p className="bg-gradient-to-br from-brand-500 to-purple-500 bg-clip-text text-3xl font-extrabold text-transparent">61% vs 40%</p>
+            <p className="mt-2 text-sm text-subtle">
+              of women vs. men with ADHD are diagnosed in adulthood rather than childhood -- the quieter, inattentive
+              presentation is easy to miss, especially in girls.
+            </p>
+          </div>
+          <div className="glass-card p-5">
+            <p className="bg-gradient-to-br from-brand-500 to-purple-500 bg-clip-text text-3xl font-extrabold text-transparent">57% / 73%</p>
+            <p className="mt-2 text-sm text-subtle">
+              of long-term studies found <strong>untreated</strong> ADHD linked to worse self-esteem and worse social
+              functioning, respectively, than people without ADHD -- confidence issues aren't a side note, they're a
+              documented pattern.
+            </p>
+          </div>
+          <div className="glass-card p-5">
+            <p className="bg-gradient-to-br from-brand-500 to-purple-500 bg-clip-text text-3xl font-extrabold text-transparent">89% / 77%</p>
+            <p className="mt-2 text-sm text-subtle">
+              of those same studies found that <strong>treatment</strong> improved self-esteem and social-functioning
+              outcomes -- the gap above is real, but it's addressable once it's actually identified.
+            </p>
+          </div>
+        </div>
+
+        <p className="mx-auto mt-6 max-w-xl text-center text-xs leading-relaxed text-faint">
+          Left unaddressed, childhood ADHD also predicts measurably worse educational attainment, job stability, and
+          relationship outcomes by young adulthood ({referenceById("barkley2006outcomes")?.cite}). None of this means
+          catching it is a cure-all -- it means the cost of not looking is real, and worth weighing against the ~12
+          minutes this screening takes.
+        </p>
+        <p className="mx-auto mt-3 max-w-xl text-center text-[11px] leading-relaxed text-faint">
+          Sources: {referenceById("staley2024mmwr")?.cite} &middot; {referenceById("harpin2013selfesteem")?.cite}
+        </p>
       </div>
 
       <div className="mt-16 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">

@@ -128,6 +128,22 @@ export const references: Reference[] = [
     usedFor: "The 'Not a diagnosis' banner and every report disclaimer in ui/report.ts.",
   },
   {
+    id: "staley2024mmwr",
+    cite: "Staley BS, Robinson LR, Claussen AH, et al. (2024). Attention-Deficit/Hyperactivity Disorder Diagnosis, Treatment, and Telehealth Use in Adults -- National Center for Health Statistics Rapid Surveys System, United States, October-November 2023. MMWR Morb Mortal Wkly Rep 73(40):890-895.",
+    topic: "prevalence",
+    finding:
+      "An estimated 15.5 million US adults (6.0%) had a current ADHD diagnosis in 2023; about half were diagnosed at age 18 or older, not in childhood -- 61% of women vs. 40% of men were diagnosed in adulthood.",
+    usedFor: "Landing page 'why early detection matters' section -- how common an adulthood-only diagnosis actually is, and the gender gap in when it's caught.",
+  },
+  {
+    id: "harpin2013selfesteem",
+    cite: "Harpin V, Mazzone L, Raynaud JP, Kahle J, Hodgkins P (2013). Long-term outcomes of ADHD: a systematic review of self-esteem and social function. J Atten Disord 20(4):295-305.",
+    topic: "outcomes",
+    finding:
+      "Across 127 studies reporting 150 long-term outcomes, untreated ADHD was linked to poorer self-esteem in 57% and poorer social function in 73% of outcomes versus non-ADHD controls; treatment was linked to improvement in 89% of self-esteem outcomes and 77% of social-function outcomes.",
+    usedFor: "Landing page 'why early detection matters' section -- the self-esteem/confidence and social-function cost of it going unaddressed, and that treatment measurably helps.",
+  },
+  {
     id: "barkley2006outcomes",
     cite: "Barkley RA, Fischer M, Smallish L, Fletcher K (2006). Young adult outcome of hyperactive children: adaptive functioning in major life activities. J Am Acad Child Adolesc Psychiatry 45(2):192-202.",
     topic: "outcomes",
