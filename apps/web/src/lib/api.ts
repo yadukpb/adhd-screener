@@ -146,6 +146,15 @@ export interface PracticeEntry {
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+  createdAt?: string;
+}
+
+export interface ChatHistoryPage {
+  messages: ChatMessage[];
+  hasMore: boolean;
+  /** Only present on the first (non-paginated) page of "coach" mode -- a rules-based, context-aware greeting/suggestions, not a fixed script. */
+  greeting?: string;
+  suggestions?: string[];
 }
 
 export const chatApi = {
@@ -153,7 +162,8 @@ export const chatApi = {
     request<{ reply: string }>(`/api/chat/${sessionId}`, { method: "POST", body: JSON.stringify({ message, history }) }),
   sendCoach: (message: string, history: ChatMessage[]) =>
     request<{ reply: string }>("/api/chat/coach", { method: "POST", body: JSON.stringify({ message, history }) }),
-  history: (sessionId?: string) => request<ChatMessage[]>(`/api/chat/${sessionId ?? "coach"}/history`),
+  history: (sessionId?: string, before?: string) =>
+    request<ChatHistoryPage>(`/api/chat/${sessionId ?? "coach"}/history${before ? `?before=${encodeURIComponent(before)}` : ""}`),
 };
 
 export interface Suggestion {

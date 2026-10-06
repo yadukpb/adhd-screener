@@ -50,6 +50,17 @@ const COACH_GREETING =
   "Hi! I'm your daily coach -- I can see your latest screening, today's planner, today's check-in, and your learning path. Ask me anything, from \"what should I focus on\" to how your week's been going.";
 const COACH_SUGGESTIONS = ["What should I focus on today?", "Help me get started on something I'm avoiding", "How am I doing lately?"];
 
+/** "Today" / "Yesterday" / a short date -- used to break up a long-running, persisted conversation into visitable days. */
+function dayLabel(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const diffDays = Math.round((startOf(now) - startOf(d)) / 86_400_000);
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Yesterday";
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: d.getFullYear() !== now.getFullYear() ? "numeric" : undefined });
+}
+
 /**
  * The actual stateful chat UI (messages + input), with no card/header chrome
  * around it -- shared by the full-page ResultsChat card below and the
@@ -69,23 +80,39 @@ export function ChatThread({
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [dynamicGreeting, setDynamicGreeting] = useState<string | null>(null);
+  const [dynamicSuggestions, setDynamicSuggestions] = useState<string[] | null>(null);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const greeting = useMemo(() => (mode === "coach" ? COACH_GREETING : greetingFor(indicators)), [mode, indicators]);
-  const suggestions = useMemo(() => (mode === "coach" ? COACH_SUGGESTIONS : suggestionsFor(indicators)), [mode, indicators]);
+  const skipNextScrollRef = useRef(false);
+  const fallbackGreeting = useMemo(() => (mode === "coach" ? COACH_GREETING : greetingFor(indicators)), [mode, indicators]);
+  const fallbackSuggestions = useMemo(() => (mode === "coach" ? COACH_SUGGESTIONS : suggestionsFor(indicators)), [mode, indicators]);
+  // The coach's greeting/suggestions are rules-based but recomputed server-side
+  // on every load (apps/api/src/routes/chat.ts#buildCoachGreeting) from
+  // whatever's actually true right now, so they vary visit to visit instead
+  // of being the same fixed script -- these are just the offline fallback.
+  const greeting = dynamicGreeting ?? fallbackGreeting;
+  const suggestions = dynamicSuggestions ?? fallbackSuggestions;
 
-  // Every chat turn is persisted server-side (see apps/api/src/routes/chat.ts)
-  // -- load it back in so reopening the widget or the results page doesn't
-  // throw away a real conversation.
+  // Every chat turn is persisted server-side -- load it back in so reopening
+  // the widget or the results page doesn't throw away a real conversation.
   useEffect(() => {
     let cancelled = false;
     setHistoryLoaded(false);
+    setDynamicGreeting(null);
+    setDynamicSuggestions(null);
     chatApi
       .history(mode === "coach" ? undefined : sessionId)
-      .then((past) => {
-        if (!cancelled) setMessages(past);
+      .then((page) => {
+        if (cancelled) return;
+        setMessages(page.messages);
+        setHasMore(page.hasMore);
+        if (page.greeting) setDynamicGreeting(page.greeting);
+        if (page.suggestions) setDynamicSuggestions(page.suggestions);
       })
       .catch(() => {
         /* no history yet, or it failed to load -- start fresh either way */
@@ -99,6 +126,10 @@ export function ChatThread({
   }, [mode, sessionId]);
 
   useEffect(() => {
+    if (skipNextScrollRef.current) {
+      skipNextScrollRef.current = false;
+      return;
+    }
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, sending]);
 
@@ -120,10 +151,36 @@ export function ChatThread({
     }
   }
 
+  async function loadEarlier() {
+    const oldest = messages[0];
+    if (loadingMore || !oldest?.createdAt) return;
+    setLoadingMore(true);
+    try {
+      const page = await chatApi.history(mode === "coach" ? undefined : sessionId, oldest.createdAt);
+      skipNextScrollRef.current = true;
+      setMessages((prev) => [...page.messages, ...prev]);
+      setHasMore(page.hasMore);
+    } catch {
+      /* the button just stays put -- they can try again */
+    } finally {
+      setLoadingMore(false);
+    }
+  }
+
   return (
     <>
       <div ref={scrollRef} className={`flex min-h-[8rem] flex-col gap-3 overflow-y-auto pr-1 ${maxHeightClassName}`}>
         {!historyLoaded && <p className="text-sm text-faint">Loading conversation...</p>}
+        {historyLoaded && hasMore && (
+          <button
+            type="button"
+            onClick={loadEarlier}
+            disabled={loadingMore}
+            className="mx-auto rounded-full border border-subtle px-3 py-1 text-xs text-faint transition hover-inset disabled:opacity-50"
+          >
+            {loadingMore ? "Loading..." : "Load earlier messages"}
+          </button>
+        )}
         {historyLoaded && messages.length === 0 && (
           <div className="flex flex-col gap-3">
             <div className="flex items-start justify-start gap-2">
@@ -147,18 +204,28 @@ export function ChatThread({
             </div>
           </div>
         )}
-        {messages.map((m, i) => (
-          <div key={i} className={`flex items-start gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-            {m.role === "assistant" && <CoachAvatar />}
-            <p
-              className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                m.role === "user" ? "bg-gradient-to-br from-brand-500 to-purple-500 text-white" : "bg-inset text-body"
-              }`}
-            >
-              {m.content}
-            </p>
-          </div>
-        ))}
+        {messages.map((m, i) => {
+          const prevDay = i > 0 && messages[i - 1].createdAt ? dayLabel(messages[i - 1].createdAt!) : null;
+          const thisDay = m.createdAt ? dayLabel(m.createdAt) : null;
+          const showDivider = thisDay !== null && thisDay !== prevDay;
+          return (
+            <div key={i}>
+              {showDivider && (
+                <p className="my-1 text-center text-xs font-medium uppercase tracking-wide text-faint">{thisDay}</p>
+              )}
+              <div className={`flex items-start gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                {m.role === "assistant" && <CoachAvatar />}
+                <p
+                  className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                    m.role === "user" ? "bg-gradient-to-br from-brand-500 to-purple-500 text-white" : "bg-inset text-body"
+                  }`}
+                >
+                  {m.content}
+                </p>
+              </div>
+            </div>
+          );
+        })}
         {sending && (
           <div className="flex items-start justify-start gap-2">
             <CoachAvatar />
@@ -166,6 +233,22 @@ export function ChatThread({
           </div>
         )}
       </div>
+
+      {historyLoaded && messages.length > 0 && suggestions.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {suggestions.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => send(s)}
+              disabled={sending}
+              className="rounded-full border border-subtle bg-inset px-3 py-1.5 text-xs text-body transition hover-inset disabled:opacity-50"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
 
       {error && <p className="mt-2 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
