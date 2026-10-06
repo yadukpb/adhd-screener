@@ -1,14 +1,53 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Indicator } from "@adhd-screener/core";
 import { chatApi, ApiError, type ChatMessage } from "../lib/api";
+import { FRIENDLY_LABEL } from "../lib/plainLanguage";
 
-const SUGGESTIONS = ["What does this actually mean for me?", "What should I do next?", "Explain that in simpler terms"];
+const FALLBACK_SUGGESTIONS = ["What does this actually mean for me?", "What should I do next?", "Explain that in simpler terms"];
 
-export function ResultsChat({ sessionId }: { sessionId: string }) {
+function greetingFor(indicators: Indicator[] | undefined): string {
+  if (!indicators || indicators.length === 0) {
+    return "Hi! I can see your screening results -- ask me anything about what they mean, in plain language.";
+  }
+  const elevated = indicators.filter((i) => i.level === "elevated");
+  const mild = indicators.filter((i) => i.level === "mild");
+  if (elevated.length === 0 && mild.length === 0) {
+    return "Hi! Your results came back mostly typical. Ask me anything about what that does (and doesn't) tell you.";
+  }
+  const parts: string[] = [];
+  if (elevated.length > 0) parts.push(`${elevated.length} measure${elevated.length > 1 ? "s" : ""} notably different from typical`);
+  if (mild.length > 0) parts.push(`${mild.length} mildly so`);
+  return `Hi! I can see ${parts.join(" and ")} in your results. Ask me anything -- I'll explain it in plain language, no jargon.`;
+}
+
+function suggestionsFor(indicators: Indicator[] | undefined): string[] {
+  if (!indicators || indicators.length === 0) return FALLBACK_SUGGESTIONS;
+  const notable = [...indicators].filter((i) => i.level !== "typical").sort((a, b) => (b.z ?? 0) - (a.z ?? 0));
+  if (notable.length === 0) return ["What does 'typical' actually mean here?", "What should I do with this result?", "Is this worth telling a doctor about?"];
+  const top = notable[0];
+  const label = FRIENDLY_LABEL[top.key] ?? top.label;
+  const suggestions = [`What does "${label}" actually mean for me?`, "What should I do next?"];
+  if (notable.length > 1) suggestions.push("Which of these matters most?");
+  else suggestions.push("Explain that in simpler terms");
+  return suggestions;
+}
+
+export function ResultsChat({
+  sessionId,
+  indicators,
+  title = "Ask about your results",
+}: {
+  sessionId: string;
+  indicators?: Indicator[];
+  title?: string;
+}) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const greeting = useMemo(() => greetingFor(indicators), [indicators]);
+  const suggestions = useMemo(() => suggestionsFor(indicators), [indicators]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -34,17 +73,22 @@ export function ResultsChat({ sessionId }: { sessionId: string }) {
 
   return (
     <div className="glass-card flex flex-col p-5 sm:p-6">
-      <h2 className="text-lg font-bold text-heading">Ask about your results</h2>
+      <h2 className="text-lg font-bold text-heading">{title}</h2>
       <p className="mt-1 text-sm text-subtle">
         Chat about what these results mean, in plain language -- no jargon. Not a substitute for professional advice.
       </p>
 
       <div ref={scrollRef} className="mt-4 flex max-h-96 min-h-[8rem] flex-col gap-3 overflow-y-auto pr-1">
         {messages.length === 0 && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
+            <div className="flex justify-start">
+              <p className="max-w-[85%] whitespace-pre-wrap rounded-2xl bg-inset px-4 py-2.5 text-sm leading-relaxed text-body">
+                {greeting}
+              </p>
+            </div>
             <p className="text-sm text-faint">Try asking:</p>
             <div className="flex flex-wrap gap-2">
-              {SUGGESTIONS.map((s) => (
+              {suggestions.map((s) => (
                 <button
                   key={s}
                   type="button"

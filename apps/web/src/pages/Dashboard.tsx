@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { sessionsApi, type SessionSummary } from "../lib/api";
 import { TrendChart } from "../components/TrendChart";
+import { ResultsChat } from "../components/ResultsChat";
 import { useAuth } from "../hooks/useAuth";
 import { headlineForCounts } from "../lib/plainLanguage";
 
@@ -45,6 +46,12 @@ export function Dashboard() {
             </div>
             <span className="shrink-0 text-brand-600 dark:text-brand-300">&rarr;</span>
           </Link>
+
+          <ResultsChat
+            sessionId={sessions[sessions.length - 1]._id}
+            indicators={sessions[sessions.length - 1].indicators}
+            title="Ask about your latest results"
+          />
 
           <TrendChart sessions={sessions} />
 

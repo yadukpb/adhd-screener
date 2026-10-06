@@ -52,7 +52,7 @@ export function ReportPage() {
       <ReportView indicators={session.indicators} previous={previous?.indicators} />
 
       <div className="mt-8">
-        <ResultsChat sessionId={session._id} />
+        <ResultsChat sessionId={session._id} indicators={session.indicators} />
       </div>
     </div>
   );

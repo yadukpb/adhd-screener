@@ -13,8 +13,9 @@ export function Landing() {
         Understand your attention, inhibition, and working memory
       </h1>
       <p className="mx-auto mt-4 max-w-xl text-subtle">
-        Two validated questionnaires and three short computer tasks, scored against literature-informed norms with every
-        claim traced to a citation. Track how your indicators move over time.
+        Three short questionnaires and three computer tasks, scored against literature-informed norms with every claim
+        traced to a citation. Track how your indicators move over time, and ask an AI that already knows your results
+        to walk you through them in plain language.
       </p>
       <div className="mt-8 flex justify-center gap-3">
         <Link to={user ? "/screen" : "/register"} className="btn-primary px-6 py-3">
@@ -27,11 +28,12 @@ export function Landing() {
         )}
       </div>
 
-      <div className="mt-16 grid gap-4 text-left sm:grid-cols-3">
+      <div className="mt-16 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { title: "ASRS + WURS", body: "Validated current and childhood-symptom questionnaires with real published scoring thresholds." },
+          { title: "3 questionnaires", body: "Current symptoms, childhood symptoms, and emotional regulation -- every scoring threshold traced to its source." },
           { title: "3 objective tasks", body: "A go/no-go CPT, a stop-signal task, and a 2-back -- the same measures used in the ADHD research literature." },
           { title: "Your trend over time", body: "Every result is saved to your account so you can see each indicator move across repeated screenings." },
+          { title: "Ask the AI about it", body: "Once you have results, chat with an assistant that already has the full context -- plain-language answers, no clinical jargon." },
         ].map((f) => (
           <div key={f.title} className="glass-card p-5">
             <h3 className="font-semibold text-heading">{f.title}</h3>
