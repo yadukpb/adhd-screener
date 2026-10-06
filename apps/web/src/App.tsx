@@ -15,6 +15,7 @@ import { Planner } from "./pages/Planner";
 import { Focus } from "./pages/Focus";
 import { Habits } from "./pages/Habits";
 import { Coach } from "./pages/Coach";
+import { Admin } from "./pages/Admin";
 
 export function App() {
   return (
@@ -91,6 +92,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <Coach />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute adminOnly>
+                <Admin />
               </ProtectedRoute>
             }
           />

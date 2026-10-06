@@ -74,6 +74,11 @@ export function NavBar() {
                 <Link to="/learning-path" className={navLinkClass}>
                   My Path
                 </Link>
+                {user.role === "admin" && (
+                  <Link to="/admin" className={navLinkClass}>
+                    Admin
+                  </Link>
+                )}
               </>
             )}
           </nav>
@@ -153,6 +158,11 @@ export function NavBar() {
                 <Link to="/learning-path" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   My Path
                 </Link>
+                {user.role === "admin" && (
+                  <Link to="/admin" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                    Admin
+                  </Link>
+                )}
               </>
             )}
           </nav>

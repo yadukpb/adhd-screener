@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { UserModel } from "../models/User";
 
 export interface AuthedRequest extends Request {
   userId?: string;
@@ -29,4 +30,14 @@ export function requireAuth(req: AuthedRequest, res: Response, next: NextFunctio
   } catch {
     res.status(401).json({ error: "Invalid or expired session" });
   }
+}
+
+/** Register AFTER requireAuth on a route -- relies on req.userId already being set. */
+export async function requireAdmin(req: AuthedRequest, res: Response, next: NextFunction): Promise<void> {
+  const user = await UserModel.findById(req.userId).select("role").lean();
+  if (!user || user.role !== "admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  next();
 }

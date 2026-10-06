@@ -1,4 +1,5 @@
 import { ResultsChat } from "../components/ResultsChat";
+import { COACH_NAME } from "../lib/coachPersona";
 
 export function Coach() {
   return (
@@ -12,7 +13,7 @@ export function Coach() {
       <div className="mt-6">
         <ResultsChat
           mode="coach"
-          title="Talk to your coach"
+          title={`Talk to ${COACH_NAME}`}
           subtitle="Context-aware across your whole account, not just one screening. Not a substitute for professional advice."
         />
       </div>

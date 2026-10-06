@@ -2,6 +2,20 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Indicator } from "@adhd-screener/core";
 import { chatApi, ApiError, type ChatMessage } from "../lib/api";
 import { FRIENDLY_LABEL } from "../lib/plainLanguage";
+import { COACH_NAME, COACH_AVATAR_URL } from "../lib/coachPersona";
+
+function CoachAvatar({ size = 28 }: { size?: number }) {
+  return (
+    <img
+      src={COACH_AVATAR_URL}
+      alt={COACH_NAME}
+      width={size}
+      height={size}
+      className="mt-0.5 shrink-0 rounded-full bg-inset"
+      style={{ width: size, height: size }}
+    />
+  );
+}
 
 const FALLBACK_SUGGESTIONS = ["What does this actually mean for me?", "What should I do next?", "Explain that in simpler terms"];
 
@@ -54,12 +68,35 @@ export function ChatThread({
   maxHeightClassName?: string;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const greeting = useMemo(() => (mode === "coach" ? COACH_GREETING : greetingFor(indicators)), [mode, indicators]);
   const suggestions = useMemo(() => (mode === "coach" ? COACH_SUGGESTIONS : suggestionsFor(indicators)), [mode, indicators]);
+
+  // Every chat turn is persisted server-side (see apps/api/src/routes/chat.ts)
+  // -- load it back in so reopening the widget or the results page doesn't
+  // throw away a real conversation.
+  useEffect(() => {
+    let cancelled = false;
+    setHistoryLoaded(false);
+    chatApi
+      .history(mode === "coach" ? undefined : sessionId)
+      .then((past) => {
+        if (!cancelled) setMessages(past);
+      })
+      .catch(() => {
+        /* no history yet, or it failed to load -- start fresh either way */
+      })
+      .finally(() => {
+        if (!cancelled) setHistoryLoaded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, sessionId]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -86,9 +123,11 @@ export function ChatThread({
   return (
     <>
       <div ref={scrollRef} className={`flex min-h-[8rem] flex-col gap-3 overflow-y-auto pr-1 ${maxHeightClassName}`}>
-        {messages.length === 0 && (
+        {!historyLoaded && <p className="text-sm text-faint">Loading conversation...</p>}
+        {historyLoaded && messages.length === 0 && (
           <div className="flex flex-col gap-3">
-            <div className="flex justify-start">
+            <div className="flex items-start justify-start gap-2">
+              <CoachAvatar />
               <p className="max-w-[85%] whitespace-pre-wrap rounded-2xl bg-inset px-4 py-2.5 text-sm leading-relaxed text-body">
                 {greeting}
               </p>
@@ -109,7 +148,8 @@ export function ChatThread({
           </div>
         )}
         {messages.map((m, i) => (
-          <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+          <div key={i} className={`flex items-start gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+            {m.role === "assistant" && <CoachAvatar />}
             <p
               className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                 m.role === "user" ? "bg-gradient-to-br from-brand-500 to-purple-500 text-white" : "bg-inset text-body"
@@ -120,8 +160,9 @@ export function ChatThread({
           </div>
         ))}
         {sending && (
-          <div className="flex justify-start">
-            <p className="rounded-2xl bg-inset px-4 py-2.5 text-sm text-faint">Thinking...</p>
+          <div className="flex items-start justify-start gap-2">
+            <CoachAvatar />
+            <p className="rounded-2xl bg-inset px-4 py-2.5 text-sm text-faint">{COACH_NAME} is thinking...</p>
           </div>
         )}
       </div>
@@ -155,7 +196,7 @@ export function ResultsChat({
   mode = "results",
   sessionId,
   indicators,
-  title = "Ask about your results",
+  title = `Ask ${COACH_NAME} about your results`,
   subtitle = "Chat about what these results mean, in plain language -- no jargon. Not a substitute for professional advice.",
 }: {
   mode?: "results" | "coach";
@@ -166,8 +207,13 @@ export function ResultsChat({
 }) {
   return (
     <div className="glass-card flex flex-col p-5 sm:p-6">
-      <h2 className="text-lg font-bold text-heading">{title}</h2>
-      <p className="mt-1 text-sm text-subtle">{subtitle}</p>
+      <div className="flex items-center gap-3">
+        <CoachAvatar size={36} />
+        <div>
+          <h2 className="text-lg font-bold text-heading">{title}</h2>
+          <p className="mt-0.5 text-sm text-subtle">{subtitle}</p>
+        </div>
+      </div>
       <div className="mt-4 flex flex-col">
         <ChatThread mode={mode} sessionId={sessionId} indicators={indicators} />
       </div>

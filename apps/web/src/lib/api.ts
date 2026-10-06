@@ -26,6 +26,7 @@ export interface AuthUser {
   id: string;
   email: string;
   name: string;
+  role: "user" | "admin";
 }
 
 export const authApi = {
@@ -152,6 +153,22 @@ export const chatApi = {
     request<{ reply: string }>(`/api/chat/${sessionId}`, { method: "POST", body: JSON.stringify({ message, history }) }),
   sendCoach: (message: string, history: ChatMessage[]) =>
     request<{ reply: string }>("/api/chat/coach", { method: "POST", body: JSON.stringify({ message, history }) }),
+  history: (sessionId?: string) => request<ChatMessage[]>(`/api/chat/${sessionId ?? "coach"}/history`),
+};
+
+export interface Suggestion {
+  _id: string;
+  message: string;
+  status: "new" | "reviewed";
+  createdAt: string;
+  user: { _id: string; name: string; email: string } | string;
+}
+
+export const suggestionsApi = {
+  create: (message: string) => request<Suggestion>("/api/suggestions", { method: "POST", body: JSON.stringify({ message }) }),
+  list: () => request<Suggestion[]>("/api/suggestions"),
+  setStatus: (id: string, status: "new" | "reviewed") =>
+    request<Suggestion>(`/api/suggestions/${id}`, { method: "PATCH", body: JSON.stringify({ status }) }),
 };
 
 export const practiceApi = {
