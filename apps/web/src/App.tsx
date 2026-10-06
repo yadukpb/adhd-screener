@@ -11,6 +11,7 @@ import { LearnAboutAdhd } from "./pages/LearnAboutAdhd";
 import { Exercises } from "./pages/Exercises";
 import { LearningPath } from "./pages/LearningPath";
 import { Planner } from "./pages/Planner";
+import { Focus } from "./pages/Focus";
 
 export function App() {
   return (
@@ -63,6 +64,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <Planner />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/focus"
+            element={
+              <ProtectedRoute>
+                <Focus />
               </ProtectedRoute>
             }
           />
