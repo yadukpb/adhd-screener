@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { habitLogApi, ApiError, type HabitLogEntry } from "../lib/api";
 import { todayKey } from "../lib/date";
+import { SoothingSounds } from "../components/SoothingSounds";
 
 const MOOD_COLORS = ["bg-rose-400", "bg-orange-400", "bg-amber-400", "bg-lime-400", "bg-emerald-400"];
 const MOOD_LABELS = ["Rough", "Hard", "Okay", "Good", "Great"];
@@ -137,6 +138,10 @@ export function Habits() {
             className="input-field mt-2 max-w-[8rem]"
           />
         </div>
+      </div>
+
+      <div className="mt-6">
+        <SoothingSounds />
       </div>
 
       {entries && entries.length > 0 && (

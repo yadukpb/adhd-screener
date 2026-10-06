@@ -215,7 +215,7 @@ export function Focus() {
             <div className="mx-auto mt-6 max-w-xs border-t border-faint pt-4">
               <p className="text-xs font-medium text-subtle">Background sound (optional)</p>
               <div className="mt-2 flex justify-center gap-2">
-                {(["none", "white", "brown"] as const).map((t) => (
+                {(["none", "white", "pink", "brown"] as const).map((t) => (
                   <button
                     key={t}
                     type="button"

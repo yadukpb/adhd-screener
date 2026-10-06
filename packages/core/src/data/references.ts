@@ -232,6 +232,22 @@ export const references: Reference[] = [
     usedFor: "exercises/library.ts -- the 'Name the Feeling' emotional-regulation exercise.",
   },
   {
+    id: "alvarsson2010naturesound",
+    cite: "Alvarsson JJ, Wiens S, Nilsson ME (2010). Stress recovery during exposure to nature sound and environmental noise. Int J Environ Res Public Health 7(3):1036-1046.",
+    topic: "treatment",
+    finding:
+      "After a stressful task, skin conductance (a physiological stress marker) dropped faster while listening to nature sounds (water, birdsong) than during traffic noise or silence -- heart rate showed no systematic difference. Measured recovery from an already-induced stress response, not prevention or ongoing calm.",
+    usedFor: "Soothing Sounds feature -- why ambient sound can help with calming down, distinct from the attention-focused case for white noise.",
+  },
+  {
+    id: "papalambros2017pinknoise",
+    cite: "Papalambros NA, Santostasi G, Malkani RG, Braun R, Weintraub S, Paller KA, Zee PC (2017). Acoustic enhancement of sleep slow oscillations and concomitant memory improvement in older adults. Front Hum Neurosci 11:109.",
+    topic: "treatment",
+    finding:
+      "Pink-noise pulses timed to each person's slow-wave sleep oscillations (a closed-loop protocol, not just ambient pink noise playback) improved overnight word-recall in 13 adults aged 60-84. A specific, timed protocol -- not evidence that passively playing pink noise while awake has the same effect.",
+    usedFor: "Soothing Sounds feature -- pink noise option, framed honestly as a different (sleep-specific, closed-loop) protocol than what this feature actually does.",
+  },
+  {
     id: "miller1956",
     cite: "Miller GA (1956). The magical number seven, plus or minus two: some limits on our capacity for processing information. Psychological Review 63(2):81-97.",
     topic: "treatment",
