@@ -113,6 +113,23 @@ export function IconLightbulb(props: { size?: number }) {
     </Svg>
   );
 }
+export function IconCalendar(props: { size?: number }) {
+  return (
+    <Svg {...props}>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M16 3v4M8 3v4M3 10h18" />
+      <path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01" />
+    </Svg>
+  );
+}
+export function IconTimer(props: { size?: number }) {
+  return (
+    <Svg {...props}>
+      <circle cx="12" cy="13" r="8" />
+      <path d="M12 9v4l3 2M9 2h6" />
+    </Svg>
+  );
+}
 export function IconArrowRight(props: { size?: number }) {
   return (
     <Svg {...props}>

@@ -1,7 +1,20 @@
 import { Link } from "react-router-dom";
 import { referenceById } from "@adhd-screener/core";
 import { useAuth } from "../hooks/useAuth";
-import { IconClipboard, IconCpu, IconTrend, IconChat, IconUsers, IconSplit, IconHeart, IconSparkle, IconArrowRight, IconLightbulb } from "../components/icons";
+import {
+  IconClipboard,
+  IconCpu,
+  IconTrend,
+  IconChat,
+  IconUsers,
+  IconSplit,
+  IconHeart,
+  IconSparkle,
+  IconArrowRight,
+  IconLightbulb,
+  IconCalendar,
+  IconTimer,
+} from "../components/icons";
 
 const FEATURES = [
   {
@@ -31,6 +44,29 @@ const STATS = [
   { icon: IconSplit, value: "61% vs 40%", body: "of women vs. men with ADHD are diagnosed in adulthood rather than childhood -- the quieter, inattentive presentation is easy to miss, especially in girls." },
   { icon: IconHeart, value: "57% / 73%", body: "of long-term studies found untreated ADHD linked to worse self-esteem and worse social functioning -- confidence issues aren't a side note, they're a documented pattern." },
   { icon: IconSparkle, value: "89% / 77%", body: "of those same studies found that treatment improved self-esteem and social-functioning outcomes -- the gap above is addressable once it's identified." },
+];
+
+const DAILY_TOOLS = [
+  {
+    icon: IconCalendar,
+    title: "A visual day plan",
+    body: "Color-coded tasks, scheduled or anytime -- see your day at a glance instead of holding it all in your head.",
+  },
+  {
+    icon: IconTimer,
+    title: "Actually start, actually stay",
+    body: "A visible countdown with an optional breathing break and evidence-based background sound -- logged, so you see blocks completed, not just intended.",
+  },
+  {
+    icon: IconHeart,
+    title: "Mood, medication, sleep",
+    body: "A 10-second daily check-in with a streak counter -- patterns you can actually see, not just remember.",
+  },
+  {
+    icon: IconChat,
+    title: "An AI that knows your whole picture",
+    body: "Not just your last screening -- today's plan, your check-in, your learning path. Ask it what to focus on.",
+  },
 ];
 
 const MYTH_GLIMPSE = [
@@ -319,6 +355,27 @@ export function Landing() {
           your results come back notably different from typical, the honest next step this app will tell you is the
           same one a doctor would: talk to a clinician.
         </p>
+      </section>
+
+      {/* ---------- Daily tools (beyond the one-time screening) ---------- */}
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <h2 className="text-center text-2xl font-bold text-heading">Your results aren't the finish line.</h2>
+        <p className="mx-auto mt-2 max-w-xl text-center text-sm text-subtle">
+          Most ADHD apps make you choose: get screened, or get daily tools. This one does both -- a planner, a focus
+          timer, a daily check-in, and a coach that already knows your results, all built from the same data.
+        </p>
+
+        <div className="mt-8 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
+          {DAILY_TOOLS.map((t) => (
+            <div key={t.title} className="glass-card p-5 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-purple-500 text-white">
+                <t.icon />
+              </span>
+              <h3 className="mt-3 font-semibold text-heading">{t.title}</h3>
+              <p className="mt-2 text-sm text-subtle">{t.body}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ---------- Closing CTA ---------- */}
