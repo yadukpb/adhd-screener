@@ -15,7 +15,7 @@ chatRouter.use(requireAuth);
 // Keep in sync with apps/web/src/lib/coachPersona.ts -- this is the name/
 // character the system prompt tells the model to answer as; that file is
 // what actually renders the name and avatar in the UI.
-const COACH_NAME = "Avery";
+const COACH_NAME = "Maya";
 const GROQ_MODEL = "openai/gpt-oss-120b";
 const MAX_MESSAGE_LEN = 2000;
 const MAX_HISTORY_TURNS = 10;
