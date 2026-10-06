@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express, { Router } from "express";
 import type { Indicator } from "@adhd-screener/core";
 import { ScreeningSessionModel } from "../models/ScreeningSession";
 import { DailyTaskModel } from "../models/DailyTask";
@@ -18,9 +18,11 @@ chatRouter.use(requireAuth);
 // what actually renders the name and avatar in the UI.
 const COACH_NAME = "Maya";
 const GROQ_MODEL = "openai/gpt-oss-120b";
+const GROQ_WHISPER_MODEL = "whisper-large-v3-turbo";
 const MAX_MESSAGE_LEN = 2000;
 const MAX_HISTORY_TURNS = 10;
 const HISTORY_PAGE_SIZE = 60;
+const MAX_AUDIO_BYTES = "20mb";
 
 // A plain-language map of the app's own features -- folded into every
 // system prompt so Maya can answer "what does this app do" / "where do I
@@ -351,6 +353,59 @@ chatRouter.post(
       ]);
     }
     res.status(result.status).json(result.body);
+  }),
+);
+
+// Registered before the "/:sessionId" POST route below for the same reason
+// "/coach" is -- otherwise ":sessionId" would swallow "transcribe" as a
+// session id. Takes the raw audio bytes as the request body (not JSON, not
+// multipart) -- the client sends whatever MediaRecorder produced (webm in
+// Chrome, mp4/m4a in Safari) with its real Content-Type, which both
+// expresses what format it is and is also exactly what Groq's endpoint
+// (OpenAI-compatible, same formats) wants to receive as the uploaded file.
+chatRouter.post(
+  "/transcribe",
+  express.raw({ type: () => true, limit: MAX_AUDIO_BYTES }),
+  asyncHandler<AuthedRequest>(async (req, res) => {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      res.status(503).json({ error: "Voice input isn't configured yet." });
+      return;
+    }
+    const buf = req.body as unknown;
+    if (!Buffer.isBuffer(buf) || buf.length === 0) {
+      res.status(400).json({ error: "No audio received" });
+      return;
+    }
+
+    const contentType = (req.headers["content-type"] ?? "audio/webm").split(";")[0].trim();
+    const ext = contentType.includes("mp4") || contentType.includes("m4a") ? "mp4" : contentType.includes("wav") ? "wav" : contentType.includes("ogg") ? "ogg" : "webm";
+
+    const form = new FormData();
+    form.append("file", new Blob([buf], { type: contentType }), `voice-message.${ext}`);
+    form.append("model", GROQ_WHISPER_MODEL);
+    form.append("response_format", "json");
+
+    const groqRes = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}` },
+      body: form,
+    });
+
+    if (!groqRes.ok) {
+      const errBody = await groqRes.text().catch(() => "");
+      console.error(`[transcribe] groq request failed (user=${req.userId}):`, groqRes.status, errBody);
+      res.status(502).json({ error: "Couldn't transcribe that -- try again, or type it instead." });
+      return;
+    }
+
+    const data = (await groqRes.json()) as { text?: string };
+    const text = (data.text ?? "").trim();
+    if (!text) {
+      res.status(422).json({ error: "Didn't catch any speech there -- try again, or type it instead." });
+      return;
+    }
+    res.json({ text });
   }),
 );
 

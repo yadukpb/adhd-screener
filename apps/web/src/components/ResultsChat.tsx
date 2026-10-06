@@ -3,6 +3,7 @@ import type { Indicator } from "@adhd-screener/core";
 import { chatApi, ApiError, type ChatMessage } from "../lib/api";
 import { FRIENDLY_LABEL } from "../lib/plainLanguage";
 import { COACH_NAME, COACH_AVATAR_URL } from "../lib/coachPersona";
+import { MicButton } from "./MicButton";
 
 function CoachAvatar({ size = 28 }: { size?: number }) {
   return (
@@ -89,6 +90,7 @@ export function ChatThread({
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const skipNextScrollRef = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const fallbackGreeting = useMemo(() => (mode === "coach" ? COACH_GREETING : greetingFor(indicators)), [mode, indicators]);
   const fallbackSuggestions = useMemo(() => (mode === "coach" ? COACH_SUGGESTIONS : suggestionsFor(indicators)), [mode, indicators]);
   // The coach's greeting/suggestions are rules-based but recomputed server-side
@@ -260,12 +262,20 @@ export function ChatThread({
         }}
       >
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask a question..."
           disabled={sending}
           className="min-w-0 flex-1 rounded-xl border border-subtle bg-inset px-4 py-2.5 text-sm text-body outline-none transition focus:border-brand-400"
+        />
+        <MicButton
+          disabled={sending}
+          onTranscribed={(text) => {
+            setInput((prev) => (prev.trim() ? `${prev.trim()} ${text}` : text));
+            inputRef.current?.focus();
+          }}
         />
         <button type="submit" disabled={sending || !input.trim()} className="btn-primary shrink-0 px-4 py-2.5 text-sm disabled:opacity-50">
           Send

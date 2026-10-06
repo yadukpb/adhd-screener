@@ -167,6 +167,15 @@ export const chatApi = {
     request<{ reply: string }>("/api/chat/coach", { method: "POST", body: JSON.stringify({ message, history }) }),
   history: (sessionId?: string, before?: string) =>
     request<ChatHistoryPage>(`/api/chat/${sessionId ?? "coach"}/history${before ? `?before=${encodeURIComponent(before)}` : ""}`),
+  // Raw audio bytes as the body (not JSON) -- the blob's own type (webm from
+  // Chrome, mp4/m4a from Safari) becomes the Content-Type, which the server
+  // forwards as-is to Groq's transcription endpoint.
+  transcribe: (blob: Blob) =>
+    request<{ text: string }>("/api/chat/transcribe", {
+      method: "POST",
+      body: blob,
+      headers: { "Content-Type": blob.type || "audio/webm" },
+    }),
 };
 
 export interface Suggestion {
