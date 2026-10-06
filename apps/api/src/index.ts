@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import { connectDb } from "./db";
 import { authRouter } from "./routes/auth";
 import { sessionsRouter } from "./routes/sessions";
@@ -14,17 +16,44 @@ const PORT = Number(process.env.PORT ?? 4000);
 const MONGODB_URI = process.env.MONGODB_URI ?? "mongodb://localhost:27017/adhd-screener";
 const WEB_ORIGIN = process.env.WEB_ORIGIN ?? "http://localhost:5173";
 
+// Render (like Heroku/Railway) sits the app behind a reverse proxy -- without
+// this, express-rate-limit sees every request as coming from the proxy's own
+// IP and either rate-limits everyone together or refuses to start.
 const app = express();
+app.set("trust proxy", 1);
+
+app.use(helmet());
 app.use(cors({ origin: WEB_ORIGIN, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
+// Generous baseline across the whole API, then tighter limits on the two
+// routes that actually matter: auth (brute-force) and chat (each request
+// costs real money against the Groq API, so it's the one an abuser would
+// target first).
+const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false });
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many attempts. Try again in a few minutes." },
+});
+const chatLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "You've reached the chat limit for now -- try again later." },
+});
+app.use("/api", apiLimiter);
+
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
-app.use("/api/auth", authRouter);
+app.use("/api/auth", authLimiter, authRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/learning-path", learningPathRouter);
 app.use("/api/practice", practiceRouter);
-app.use("/api/chat", chatRouter);
+app.use("/api/chat", chatLimiter, chatRouter);
 app.use("/api/screening-draft", screeningDraftRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
