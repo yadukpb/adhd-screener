@@ -48,7 +48,7 @@ export interface Indicator {
 export interface Reference {
   id: string;
   cite: string;
-  topic: "prevalence" | "brain" | "tasks" | "questionnaires" | "outcomes" | "consensus" | "genetics" | "treatment";
+  topic: "prevalence" | "brain" | "tasks" | "questionnaires" | "outcomes" | "consensus" | "genetics" | "treatment" | "emotion";
   finding: string;
   usedFor: string;
 }

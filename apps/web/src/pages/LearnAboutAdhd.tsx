@@ -132,6 +132,45 @@ export function LearnAboutAdhd() {
             strongly than a situation seems to call for.
           </p>
           <SourceList ids={["faraone2021consensus", "silverstein2019ec"]} />
+
+          <h3 className="mt-6 text-base font-semibold text-heading">Why it can feel like it comes from nowhere</h3>
+          <p>
+            A common way people describe this to themselves is that their emotions seem to just go wrong randomly --
+            fine one moment, overwhelmed or furious the next, with no obvious build-up they could have caught earlier.
+            The research points to it not being random at all; it's two specific, well-documented pieces working
+            together.
+          </p>
+          <p>
+            <strong>First, the reaction itself runs on a different timescale.</strong> Studies comparing ADHD and
+            non-ADHD emotional responses describe a "fast up, fast down" pattern: the reaction rises quicker, reaches a
+            level that looks out of proportion to what triggered it, and then fades faster than a typical emotional
+            response would. From the outside -- and often from the inside too -- that compressed timeline is exactly
+            what reads as "sudden" and "random," even though a real trigger was there the whole time.
+          </p>
+          <p>
+            <strong>Second, it's the same braking system this app already tests, just applied to feelings instead of
+            actions.</strong> The stop-signal task on this screener measures how well someone can cancel an action
+            they've already started -- that's the brain's general-purpose inhibition circuit. The leading theoretical
+            account of ADHD and emotion argues that circuit doesn't only brake actions; it also normally dampens an
+            emotional reaction down to a proportionate size, usually before it even reaches conscious awareness. When
+            that braking is weaker, the first thing a person actually notices is the full-sized reaction itself, not a
+            build-up they could have stepped in on -- because the step that would have quietly turned it down a notch
+            before they noticed anything is the part that didn't fire. That's also why it's described as a
+            self-regulation deficit rather than "feeling too much": the research doesn't show the initial spark is
+            bigger, just that the normal volume knob after it is weaker.
+          </p>
+          <p>
+            Put together, this reframes "why do my emotions keep going wrong for no reason" into something more
+            specific and far less self-blaming: a real trigger, a reaction that runs hot and fast, and a regulation
+            step that normally works invisibly in the background not engaging in time. It's also exactly why the
+            "Name the Feeling" exercise in this app's{" "}
+            <Link to="/exercises" className="text-brand-600 hover:underline dark:text-brand-300">
+              exercise library
+            </Link>{" "}
+            works on the same principle in reverse -- consciously naming a feeling while it's happening re-engages
+            regulation circuitry that the automatic version of this process didn't get to in time.
+          </p>
+          <SourceList ids={["shaw2014emotion", "barkley2010deser", "aron2004"]} />
         </Section>
 
         <Section id="how-common" title="How common it is" icon={IconUsers}>

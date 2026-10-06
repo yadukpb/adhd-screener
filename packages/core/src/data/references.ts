@@ -129,6 +129,22 @@ export const references: Reference[] = [
       "questionnaires/emotionalDyscontrol.ts -- the construct and response scale this project's own (original-wording) 4-item subscale is modeled on. Not a reproduction of this paper's item text, which isn't openly published.",
   },
   {
+    id: "shaw2014emotion",
+    cite: "Shaw P, Stringaris A, Nigg J, Leibenluft E (2014). Emotional dysregulation and attention-deficit/hyperactivity disorder. Am J Psychiatry 171(3):276-293.",
+    topic: "emotion",
+    finding:
+      "ADHD-linked emotional reactions tend to rise faster, overshoot the apparent size of the trigger, and resolve faster than typical emotional responses -- a distinct 'fast up, fast down' pattern rather than a stable mood problem, found across multiple studies reviewed.",
+    usedFor: "The 'Emotional regulation' page section's 'why it can feel random' explanation.",
+  },
+  {
+    id: "barkley2010deser",
+    cite: "Barkley RA (2010). Deficient emotional self-regulation: a core component of attention-deficit/hyperactivity disorder. Journal of ADHD and Related Disorders 1:5-37.",
+    topic: "emotion",
+    finding:
+      "Proposes that ADHD's deficit in inhibiting a response -- the same braking function behind impulsive actions -- also delays inhibiting and re-regulating an emotional reaction once it starts, rather than emotional reactions themselves being larger or more frequent to begin with.",
+    usedFor: "The 'Emotional regulation' page section's link between the stop-signal task's inhibition deficit and emotional overreactivity.",
+  },
+  {
     id: "faraone2021consensus",
     cite: "Faraone SV, Banaschewski T, Coghill D, et al. (2021). The World Federation of ADHD International Consensus Statement: 208 evidence-based conclusions about ADHD. Neurosci Biobehav Rev 128:789-818.",
     topic: "consensus",
