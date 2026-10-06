@@ -38,6 +38,7 @@ chatRouter.post(
   asyncHandler<AuthedRequest>(async (req, res) => {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
+      console.warn(`[chat] rejected request from user=${req.userId}: GROQ_API_KEY not set`);
       res.status(503).json({ error: "The results chat isn't configured yet." });
       return;
     }
@@ -79,7 +80,7 @@ chatRouter.post(
 
     if (!groqRes.ok) {
       const errBody = await groqRes.text().catch(() => "");
-      console.error("[chat] groq request failed:", groqRes.status, errBody);
+      console.error(`[chat] groq request failed for user=${req.userId} session=${req.params.sessionId}:`, groqRes.status, errBody);
       res.status(502).json({ error: "Couldn't reach the chat assistant. Try again in a moment." });
       return;
     }
@@ -87,6 +88,7 @@ chatRouter.post(
     const data = (await groqRes.json()) as { choices?: { message?: { content?: string } }[] };
     const reply = data.choices?.[0]?.message?.content?.trim();
     if (!reply) {
+      console.error(`[chat] groq returned no reply content for user=${req.userId} session=${req.params.sessionId}:`, JSON.stringify(data));
       res.status(502).json({ error: "Couldn't reach the chat assistant. Try again in a moment." });
       return;
     }
