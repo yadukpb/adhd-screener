@@ -11,10 +11,10 @@ export function CptTask({ onComplete }: Props) {
   const plan = useMemo(() => generateCptPlan(mulberry32(Date.now()), 80, 0.2), []);
   const trialsRef = useRef<CptTrial[]>([]);
 
-  const { trial, phase } = useTimedTrials<CptPlanItem>({
+  const { trial, phase, respond } = useTimedTrials<CptPlanItem>({
     plan,
     active: started,
-    keys: [" "],
+    keys: [" ", "Tap"],
     durationMs: (t) => CPT_STIMULUS_MS + t.isiMs,
     midTrial: { delayMs: () => CPT_STIMULUS_MS },
     onTrialEnd: (t, _i, responded, rt) => {
@@ -28,7 +28,7 @@ export function CptTask({ onComplete }: Props) {
       <Instructions
         title="Task 1 of 3: Letter Monitoring"
         bullets={[
-          `Press the SPACE bar for every letter EXCEPT "${CPT_NOGO_LETTER}".`,
+          `Press SPACE (or tap the button) for every letter EXCEPT "${CPT_NOGO_LETTER}".`,
           `When you see "${CPT_NOGO_LETTER}", do nothing.`,
           "Respond as quickly and accurately as you can.",
           "Takes about 2 minutes.",
@@ -40,8 +40,14 @@ export function CptTask({ onComplete }: Props) {
 
   const showLetter = trial && phase === "primary";
   return (
-    <TaskShell label="Letter Monitoring">
-      <span>{showLetter ? trial.letter : "+"}</span>
+    <TaskShell
+      label="Letter Monitoring"
+      hint={`Tap / press SPACE for every letter except "${CPT_NOGO_LETTER}"`}
+      controls={
+        <TapButton onClick={() => respond("Tap")}>Tap</TapButton>
+      }
+    >
+      <span className={showLetter ? undefined : "text-2xl text-faint"}>{showLetter ? trial.letter : "+"}</span>
     </TaskShell>
   );
 }
@@ -67,11 +73,35 @@ export function Instructions({ title, bullets, onStart }: { title: string; bulle
   );
 }
 
-export function TaskShell({ label, children }: { label: string; children: ReactNode }) {
+export function TaskShell({
+  label,
+  hint,
+  controls,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  controls?: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <div className="mx-auto max-w-lg animate-fade-in text-center">
-      <p className="mb-3 text-sm uppercase tracking-wide text-subtle">{label}</p>
+      <p className="mb-1 text-sm uppercase tracking-wide text-subtle">{label}</p>
+      {hint && <p className="mb-3 text-xs text-faint">{hint}</p>}
       <div className="glass-card flex h-64 items-center justify-center text-6xl font-extrabold text-heading">{children}</div>
+      {controls && <div className="mt-5 flex flex-wrap items-center justify-center gap-4">{controls}</div>}
     </div>
+  );
+}
+
+export function TapButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="btn-primary min-w-[140px] flex-1 select-none px-6 py-4 text-base active:scale-95 sm:flex-none sm:px-10"
+    >
+      {children}
+    </button>
   );
 }

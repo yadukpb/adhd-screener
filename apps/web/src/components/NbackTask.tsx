@@ -9,7 +9,7 @@ import {
   type NbackTrial,
 } from "@adhd-screener/core";
 import { useTimedTrials } from "../hooks/useTimedTrials";
-import { Instructions, TaskShell } from "./CptTask";
+import { Instructions, TapButton, TaskShell } from "./CptTask";
 
 interface Props {
   onComplete: (trials: NbackTrial[]) => void;
@@ -20,10 +20,10 @@ export function NbackTask({ onComplete }: Props) {
   const plan = useMemo(() => generateNbackPlan(mulberry32(Date.now()), 50, NBACK_N, 0.3), []);
   const trialsRef = useRef<NbackTrial[]>([]);
 
-  const { trial, phase } = useTimedTrials<NbackPlanItem>({
+  const { trial, phase, respond } = useTimedTrials<NbackPlanItem>({
     plan,
     active: started,
-    keys: [" "],
+    keys: [" ", "Tap"],
     durationMs: () => NBACK_STIMULUS_MS + NBACK_ISI_MS,
     midTrial: { delayMs: () => NBACK_STIMULUS_MS },
     onTrialEnd: (t, _i, responded) => {
@@ -37,7 +37,7 @@ export function NbackTask({ onComplete }: Props) {
       <Instructions
         title="Task 3 of 3: 2-Back Memory"
         bullets={[
-          `Press SPACE whenever the current letter is the SAME as the letter shown ${NBACK_N} positions earlier.`,
+          `Press SPACE (or tap the button) whenever the current letter is the SAME as the letter shown ${NBACK_N} positions earlier.`,
           "Do nothing for every other letter.",
           "Takes about 2 minutes.",
         ]}
@@ -48,8 +48,12 @@ export function NbackTask({ onComplete }: Props) {
 
   const showLetter = trial && phase === "primary";
   return (
-    <TaskShell label="2-Back Memory">
-      <span>{showLetter ? trial.letter : "+"}</span>
+    <TaskShell
+      label="2-Back Memory"
+      hint={`Tap / press SPACE when this letter matches the one ${NBACK_N} back`}
+      controls={<TapButton onClick={() => respond("Tap")}>Match</TapButton>}
+    >
+      <span className={showLetter ? undefined : "text-2xl text-faint"}>{showLetter ? trial.letter : "+"}</span>
     </TaskShell>
   );
 }

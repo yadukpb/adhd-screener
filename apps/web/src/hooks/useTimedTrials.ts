@@ -28,13 +28,23 @@ export interface TimedTrialsState<Plan> {
   done: boolean;
 }
 
-export function useTimedTrials<Plan>(cfg: TimedTrialsConfig<Plan>): TimedTrialsState<Plan> {
+export interface TimedTrialsResult<Plan> extends TimedTrialsState<Plan> {
+  /** Registers a response for the current trial as if `key` had been pressed -- lets a touch UI stand in for the keyboard. */
+  respond: (key: string) => void;
+}
+
+export function useTimedTrials<Plan>(cfg: TimedTrialsConfig<Plan>): TimedTrialsResult<Plan> {
   const [state, setState] = useState<TimedTrialsState<Plan>>({ index: 0, trial: null, phase: "primary", done: false });
   // Config changes (new closures) every render in a typical caller, so keep
   // a ref to the latest config and only start the loop once per `active`
   // flip rather than re-running the whole trial machine on every render.
   const cfgRef = useRef(cfg);
   cfgRef.current = cfg;
+  // Points at the current trial's respond function; swapped out each
+  // runTrial call. Wrapped in a stable function so callers (touch buttons)
+  // get a referentially stable `respond` without needing to resubscribe.
+  const respondImplRef = useRef<(key: string) => void>(() => {});
+  const respond = useRef((key: string) => respondImplRef.current(key)).current;
 
   useEffect(() => {
     if (!cfg.active) return;
@@ -55,6 +65,15 @@ export function useTimedTrials<Plan>(cfg: TimedTrialsConfig<Plan>): TimedTrialsS
       let rt: number | null = null;
       let respondedKey: string | null = null;
 
+      function registerResponse(key: string) {
+        if (!cfgRef.current.keys.includes(key)) return;
+        if (responded) return;
+        responded = true;
+        rt = performance.now() - onsetAt;
+        respondedKey = key;
+      }
+      respondImplRef.current = registerResponse;
+
       const onKey = (e: KeyboardEvent) => {
         if (!cfgRef.current.keys.includes(e.key)) return;
         // Space/ArrowUp/ArrowDown scroll the page and ArrowLeft/Right can
@@ -62,10 +81,7 @@ export function useTimedTrials<Plan>(cfg: TimedTrialsConfig<Plan>): TimedTrialsS
         // yanks the viewport out from under the task (confirmed live: a
         // single unprevented Space press scrolled the page >500px).
         e.preventDefault();
-        if (responded) return;
-        responded = true;
-        rt = performance.now() - onsetAt;
-        respondedKey = e.key;
+        registerResponse(e.key);
       };
       window.addEventListener("keydown", onKey);
 
@@ -97,5 +113,5 @@ export function useTimedTrials<Plan>(cfg: TimedTrialsConfig<Plan>): TimedTrialsS
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cfg.active]);
 
-  return state;
+  return { ...state, respond };
 }

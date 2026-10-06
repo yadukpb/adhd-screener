@@ -8,7 +8,7 @@ import {
   type GoDirection,
 } from "@adhd-screener/core";
 import { useTimedTrials } from "../hooks/useTimedTrials";
-import { Instructions, TaskShell } from "./CptTask";
+import { Instructions, TapButton, TaskShell } from "./CptTask";
 
 const TRIAL_WINDOW_MS = 1200;
 const ARROW: Record<GoDirection, string> = { left: "←", right: "→" };
@@ -26,7 +26,7 @@ export function StopTask({ onComplete }: Props) {
   const maxRtRef = useRef(0);
   const ssdForTrialRef = useRef<number | null>(null);
 
-  const { trial, phase } = useTimedTrials<StopPlanItem>({
+  const { trial, phase, respond } = useTimedTrials<StopPlanItem>({
     plan,
     active: started,
     keys: ["ArrowLeft", "ArrowRight"],
@@ -59,8 +59,8 @@ export function StopTask({ onComplete }: Props) {
       <Instructions
         title="Task 2 of 3: Go / Stop"
         bullets={[
-          "Press LEFT or RIGHT arrow to match the direction shown, as fast as you can.",
-          "Sometimes the arrow turns red after it appears -- when that happens, try NOT to press anything.",
+          "Press LEFT or RIGHT arrow (or tap the matching button) to match the direction shown, as fast as you can.",
+          "Sometimes the arrow turns red after it appears -- when that happens, try NOT to press/tap anything.",
           "Takes about 2 minutes.",
         ]}
         onStart={() => setStarted(true)}
@@ -70,7 +70,16 @@ export function StopTask({ onComplete }: Props) {
 
   const isStopCue = trial?.stop && phase === "secondary";
   return (
-    <TaskShell label="Go / Stop">
+    <TaskShell
+      label="Go / Stop"
+      hint="Tap / press the arrow matching the direction shown -- unless it turns red"
+      controls={
+        <>
+          <TapButton onClick={() => respond("ArrowLeft")}>&larr; Left</TapButton>
+          <TapButton onClick={() => respond("ArrowRight")}>Right &rarr;</TapButton>
+        </>
+      }
+    >
       <span className={isStopCue ? "text-red-500" : undefined}>{trial ? ARROW[trial.direction] : ""}</span>
     </TaskShell>
   );
