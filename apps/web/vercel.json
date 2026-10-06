@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://adhd-screener-api.onrender.com/api/:path*"
+    },
+    {
+      "source": "/((?!assets/).*)",
+      "destination": "/index.html"
     }
   ]
 }
