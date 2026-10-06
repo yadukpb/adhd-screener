@@ -130,6 +130,22 @@ export function IconTimer(props: { size?: number }) {
     </Svg>
   );
 }
+export function IconRoute(props: { size?: number }) {
+  return (
+    <Svg {...props}>
+      <circle cx="6" cy="19" r="2" />
+      <circle cx="18" cy="5" r="2" />
+      <path d="M8 19h7a4 4 0 0 0 4-4v-1a4 4 0 0 0-4-4H9a4 4 0 0 1-4-4v-1" />
+    </Svg>
+  );
+}
+export function IconActivity(props: { size?: number }) {
+  return (
+    <Svg {...props}>
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </Svg>
+  );
+}
 export function IconArrowRight(props: { size?: number }) {
   return (
     <Svg {...props}>

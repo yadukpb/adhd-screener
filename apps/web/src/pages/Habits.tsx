@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import { habitLogApi, ApiError, type HabitLogEntry } from "../lib/api";
+import { todayKey } from "../lib/date";
 
 const MOOD_COLORS = ["bg-rose-400", "bg-orange-400", "bg-amber-400", "bg-lime-400", "bg-emerald-400"];
 const MOOD_LABELS = ["Rough", "Hard", "Okay", "Good", "Great"];
-
-function todayKey(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
 
 export function Habits() {
   const [entries, setEntries] = useState<HabitLogEntry[] | null>(null);

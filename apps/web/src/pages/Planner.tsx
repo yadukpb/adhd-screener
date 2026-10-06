@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { dailyTasksApi, ApiError, type DailyTask, type TaskColor } from "../lib/api";
+import { toDateKey, todayKey } from "../lib/date";
 
 const COLOR_STYLES: Record<TaskColor, { border: string; dot: string; ring: string }> = {
   blue: { border: "border-sky-400", dot: "bg-sky-400", ring: "ring-sky-400" },
@@ -9,13 +10,6 @@ const COLOR_STYLES: Record<TaskColor, { border: string; dot: string; ring: strin
   rose: { border: "border-rose-400", dot: "bg-rose-400", ring: "ring-rose-400" },
 };
 const COLORS: TaskColor[] = ["blue", "green", "purple", "amber", "rose"];
-
-function toDateKey(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
 
 function fromDateKey(key: string): Date {
   const [y, m, d] = key.split("-").map(Number);
@@ -36,7 +30,7 @@ function formatTime12h(time: string): string {
 }
 
 export function Planner() {
-  const today = toDateKey(new Date());
+  const today = todayKey();
   const [dateKey, setDateKey] = useState(today);
   const [tasks, setTasks] = useState<DailyTask[] | null>(null);
   const [error, setError] = useState<string | null>(null);
