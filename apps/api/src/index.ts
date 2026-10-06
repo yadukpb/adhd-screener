@@ -12,6 +12,7 @@ import { practiceRouter } from "./routes/practice";
 import { chatRouter } from "./routes/chat";
 import { screeningDraftRouter } from "./routes/screeningDraft";
 import { dailyTasksRouter } from "./routes/dailyTasks";
+import { habitLogRouter } from "./routes/habitLog";
 import type { AuthedRequest } from "./middleware/auth";
 
 const PORT = Number(process.env.PORT ?? 4000);
@@ -72,6 +73,7 @@ app.use("/api/practice", practiceRouter);
 app.use("/api/chat", chatLimiter, chatRouter);
 app.use("/api/screening-draft", screeningDraftRouter);
 app.use("/api/daily-tasks", dailyTasksRouter);
+app.use("/api/habit-log", habitLogRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

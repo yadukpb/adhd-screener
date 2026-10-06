@@ -10,6 +10,7 @@ export function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
 
   async function handleLogout() {
     setMenuOpen(false);
@@ -40,12 +41,33 @@ export function NavBar() {
                 <Link to="/dashboard" className={navLinkClass}>
                   Dashboard
                 </Link>
-                <Link to="/planner" className={navLinkClass}>
-                  Planner
-                </Link>
-                <Link to="/focus" className={navLinkClass}>
-                  Focus
-                </Link>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setToolsOpen((v) => !v)}
+                    onBlur={() => setTimeout(() => setToolsOpen(false), 150)}
+                    className={`${navLinkClass} flex items-center gap-1`}
+                    aria-expanded={toolsOpen}
+                  >
+                    Daily Tools
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </button>
+                  {toolsOpen && (
+                    <div className="absolute left-0 top-full z-20 mt-2 w-44 overflow-hidden rounded-xl border border-faint bg-white shadow-lg dark:bg-slate-900">
+                      <Link to="/planner" className="block px-4 py-2.5 text-sm text-body hover-inset">
+                        Planner
+                      </Link>
+                      <Link to="/focus" className="block px-4 py-2.5 text-sm text-body hover-inset">
+                        Focus Timer
+                      </Link>
+                      <Link to="/habits" className="block px-4 py-2.5 text-sm text-body hover-inset">
+                        Daily Check-in
+                      </Link>
+                    </div>
+                  )}
+                </div>
                 <Link to="/learning-path" className={navLinkClass}>
                   My Path
                 </Link>
@@ -112,11 +134,15 @@ export function NavBar() {
                 <Link to="/dashboard" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   Dashboard
                 </Link>
+                <p className="px-3 pt-2 text-xs font-semibold uppercase tracking-wide text-faint">Daily Tools</p>
                 <Link to="/planner" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   Planner
                 </Link>
                 <Link to="/focus" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
-                  Focus
+                  Focus Timer
+                </Link>
+                <Link to="/habits" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
+                  Daily Check-in
                 </Link>
                 <Link to="/learning-path" className={mobileNavLinkClass} onClick={() => setMenuOpen(false)}>
                   My Path

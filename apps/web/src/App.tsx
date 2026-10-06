@@ -12,6 +12,7 @@ import { Exercises } from "./pages/Exercises";
 import { LearningPath } from "./pages/LearningPath";
 import { Planner } from "./pages/Planner";
 import { Focus } from "./pages/Focus";
+import { Habits } from "./pages/Habits";
 
 export function App() {
   return (
@@ -72,6 +73,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <Focus />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/habits"
+            element={
+              <ProtectedRoute>
+                <Habits />
               </ProtectedRoute>
             }
           />

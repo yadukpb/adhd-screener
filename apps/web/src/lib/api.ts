@@ -177,3 +177,18 @@ export const dailyTasksApi = {
     request<DailyTask>(`/api/daily-tasks/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
   remove: (id: string) => request<void>(`/api/daily-tasks/${id}`, { method: "DELETE" }),
 };
+
+export interface HabitLogEntry {
+  _id: string;
+  date: string;
+  medicationTaken?: boolean;
+  mood?: number;
+  sleepHours?: number;
+  note?: string;
+}
+
+export const habitLogApi = {
+  range: (days = 30) => request<{ entries: HabitLogEntry[]; streak: number }>(`/api/habit-log/range?days=${days}`),
+  save: (patch: { date?: string; medicationTaken?: boolean; mood?: number; sleepHours?: number; note?: string }) =>
+    request<HabitLogEntry>("/api/habit-log", { method: "PUT", body: JSON.stringify(patch) }),
+};
