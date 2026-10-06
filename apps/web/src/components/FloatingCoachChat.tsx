@@ -22,9 +22,9 @@ export function FloatingCoachChat() {
         <div
           role="dialog"
           aria-label="Coach chat"
-          className="glass-card fixed bottom-24 right-4 z-50 flex w-[calc(100vw-2rem)] max-w-sm flex-col p-4 shadow-2xl animate-fade-in sm:bottom-28 sm:right-6"
+          className="fixed bottom-24 right-4 z-50 flex w-[calc(100vw-2rem)] max-w-sm flex-col rounded-2xl border-2 border-slate-300 bg-white p-4 shadow-2xl shadow-slate-900/20 animate-fade-in dark:border-slate-600 dark:bg-slate-900 dark:shadow-black/60 sm:bottom-28 sm:right-6"
         >
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start justify-between gap-2 border-b border-slate-200 pb-3 dark:border-slate-700">
             <div>
               <h2 className="text-base font-bold text-heading">Coach</h2>
               <p className="mt-0.5 text-xs text-subtle">
